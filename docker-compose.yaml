@@ -1,0 +1,39 @@
+version: "3"
+volumes:
+  logs:
+services:
+  # MongoDB container
+  mongodb:
+    image: "mongo:latest"
+    container_name: "mongodb"
+    environment:
+      - MONGO_INITDB_DATABASE=mongo-test-db
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+    ports:
+      - "27017-27019:27017-27019"
+    volumes:
+      - ./data/mongo-db-volume:/data/db
+    restart: always
+    networks:
+      - node-webapp-network
+#   # NodeJS container
+#   backend:
+#     depends_on:
+#       - mongodb
+#     build: .
+#     restart: always
+#     ports:
+#       - "5000:5000"
+#     volumes:
+#       - /home/salt57/logs:/app/logs
+#     links:
+#       - mongodb
+#     environment:
+#       WAIT_HOSTS: mongodb:27017
+#     networks:
+#       - node-webapp-network
+
+networks:
+  node-webapp-network:
+    driver: bridge
