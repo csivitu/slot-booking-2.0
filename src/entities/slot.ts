@@ -13,7 +13,7 @@ export class Slot {
   public endTime!: Date;
 
   @prop({ required: true, ref: () => User })
-  public slotBookedBy!: Ref<User>[]; //list of users
+  public slotBookedBy!: Ref<User>[];
 
   @prop({ required: true, default: 1 })
   public slotBookedChanges!: number;

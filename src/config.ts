@@ -19,10 +19,7 @@ export interface Config {
     uri: string;
   };
   jwt: {
-    accessSecret: string;
-    refreshSecret: string;
-    expiresIn: string;
-    refreshExpiresIn: string;
+    secret: string;
   };
 }
 
@@ -34,9 +31,6 @@ export const config: Config = {
     uri: env("MONGODB_URI"),
   },
   jwt: {
-    accessSecret: env("JWT_SECRET"),
-    refreshSecret: env("JWT_REFRESH_SECRET"),
-    expiresIn: env("JWT_EXPIRES_IN"),
-    refreshExpiresIn: env("JWT_REFRESH_EXPIRES_IN"),
+    secret: env("JWT_SECRET"),
   },
 };

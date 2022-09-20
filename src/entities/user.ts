@@ -13,8 +13,5 @@ export class User {
   public isPaid!: boolean; 
 
   @prop({ required: false, ref: () => Slot })
-  public slot!: Ref<Slot>; //ref to slot
+  public slot!: Ref<Slot>;
 }
-
-// const UserModel = getModelForClass(User);
-// export default UserModel;
