@@ -11,6 +11,5 @@ export default async (app: express.Application): Promise<express.Application> =>
   // Connect to mongoose
   await mongooseLoader();
 
-  // load apollo server config
   return app;
 };
