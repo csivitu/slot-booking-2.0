@@ -1,6 +1,6 @@
 export interface ResponseError {
     message?: string;
-    errorDetails: unknown;
+    error: unknown;
     code?: number;
   }
   

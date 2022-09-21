@@ -1,8 +1,10 @@
+import { getModelForClass } from "@typegoose/typegoose";
 import { RequestHandler } from "express";
 import { customErrorDescriptions, customErrors } from "../constants";
+import { User } from "../entities";
 import { verifyAccessToken } from "../helpers/jwtFuncs";
 
-const decodeJWT: RequestHandler = async (req, res, next) => {
+const authMiddleware: RequestHandler = async (req, res, next) => {
   const { authorization } = req.headers as { authorization: string };
 
   if (!authorization) {
@@ -16,15 +18,23 @@ const decodeJWT: RequestHandler = async (req, res, next) => {
 
   try {
     const payload = verifyAccessToken(authorization);
-    req.user = payload;
+    const userModel = getModelForClass(User);
+    let user = await userModel.findOne({ email: payload.email });
+    if (!user) {
+      //create user
+      user = await userModel.create({
+        email: payload.email,
+        name: payload.name,
+      });
+    }
+    req.user = user as User;
+    next();
   } catch (error) {
     next({
-      ...customErrors.notAuthorized(
-        customErrorDescriptions.invalidJWTToken
-      ),
+      ...customErrors.notAuthorized(customErrorDescriptions.invalidJWTToken),
       error,
     });
   }
 };
 
-export default decodeJWT;
+export default authMiddleware;

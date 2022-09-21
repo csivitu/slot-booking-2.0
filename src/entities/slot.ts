@@ -12,9 +12,6 @@ export class Slot {
   @prop({ required: true })
   public endTime!: Date;
 
-  @prop({ required: true, ref: () => User })
+  @prop({ required: true, ref: () => User, default:[] })
   public slotBookedBy!: Ref<User>[];
-
-  @prop({ required: true, default: 1 })
-  public slotBookedChanges!: number;
 }

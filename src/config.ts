@@ -21,6 +21,7 @@ export interface Config {
   jwt: {
     secret: string;
   };
+  slotCapacity: number;
 }
 
 // All your secrets, keys go here
@@ -33,4 +34,5 @@ export const config: Config = {
   jwt: {
     secret: env("JWT_SECRET"),
   },
+  slotCapacity: 10,
 };

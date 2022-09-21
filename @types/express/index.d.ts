@@ -1,9 +1,9 @@
-import { AccountsUserType } from "../../src/types/accountsUserType";
+import { User } from "../../src/entities";
 
 declare global {
   namespace Express {
     interface Request {
-      user?: AccountsUserType;
+      user: User;
     }
 
     interface Response {

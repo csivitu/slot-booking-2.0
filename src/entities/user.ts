@@ -10,8 +10,11 @@ export class User {
   public email!: string; 
 
   @prop({ default: false })
-  public isPaid!: boolean; 
+  public isPaid!: boolean;
 
-  @prop({ required: false, ref: () => Slot })
-  public slot!: Ref<Slot>;
+  @prop({ default: false })
+  public isChangedSlot!: boolean;
+
+  @prop({ref: () => Slot, default: null })
+  public slot!: Ref<Slot> | null;
 }

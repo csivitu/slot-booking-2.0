@@ -1,5 +1,4 @@
 import express from "express";
-import mongoose from "mongoose";
 
 import loaders from "./loaders";
 import { Config } from "../config";
