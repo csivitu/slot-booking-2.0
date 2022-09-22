@@ -22,7 +22,6 @@ router.post(
 );
 router.post(
   "/cancelSlot",
-  handleValidation(bookSlotSchema, RequestProperties.BODY),
   appController.cancelSlot
 );
 router.get("/userInfo", appController.getUserInfo);

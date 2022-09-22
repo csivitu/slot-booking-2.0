@@ -26,4 +26,6 @@ export const customErrorDescriptions = {
     slotFull: "Slot is full",
     userNotFound: "User not found",
     slotAlreadyBooked: "Slot already booked",
+    slotAlreadyChanged: "Slot already changed",
+    slotNotBooked: "Slot not booked",
 }
