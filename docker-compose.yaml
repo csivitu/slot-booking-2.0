@@ -15,22 +15,22 @@ services:
     restart: always
     networks:
       - node-webapp-network
-#   # NodeJS container
-#   backend:
-#     depends_on:
-#       - mongodb
-#     build: .
-#     restart: always
-#     ports:
-#       - "5000:5000"
-#     volumes:
-#       - /home/salt57/logs:/app/logs
-#     links:
-#       - mongodb
-#     environment:
-#       WAIT_HOSTS: mongodb:27017
-#     networks:
-#       - node-webapp-network
+  # NodeJS container
+  backend:
+    depends_on:
+      - mongodb
+    build: .
+    restart: always
+    ports:
+      - "3001:3001"
+    volumes:
+      - /home/salt57/logs:/app/logs
+    links:
+      - mongodb
+    environment:
+      WAIT_HOSTS: mongodb:27017
+    networks:
+      - node-webapp-network
 
 networks:
   node-webapp-network:
