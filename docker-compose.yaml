@@ -22,7 +22,7 @@ services:
     build: .
     restart: always
     ports:
-      - "3001:3001"
+      - "3002:3002"
     volumes:
       - /home/salt57/logs:/app/logs
     links:
