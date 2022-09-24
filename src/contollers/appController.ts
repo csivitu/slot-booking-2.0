@@ -54,6 +54,14 @@ const appController: AppControllerSchema = {
         error: new Error(customErrorDescriptions.slotAlreadyBooked),
       });
     }
+    // check if slot time is after current time
+    if (slot.startTime.getTime() < new Date().getTime()) {
+      return next({
+        ...customErrors.conflict(customErrorDescriptions.slotAlreadyStarted),
+        error: new Error(customErrorDescriptions.slotAlreadyStarted),
+      });
+    }
+
     slot.slotBookedBy.push(user);
     user.slotBooked = slot;
     await Promise.all([slot.save(), user.save()]);
@@ -66,7 +74,7 @@ const appController: AppControllerSchema = {
     const { slotId } = req.body as { slotId: string };
     const slotModel = getModelForClass(Slot);
     const userModel = getModelForClass(User);
-    const user = await userModel.findOne({ email: req.user.email });
+    const user = await userModel.findOne({ email: req.user.email }).populate("slotBooked");
     if (!user) {
       return next({
         ...customErrors.notFound(customErrorDescriptions.userNotFound),
@@ -104,6 +112,14 @@ const appController: AppControllerSchema = {
         error: new Error(customErrorDescriptions.slotAlreadyChanged),
       });
     }
+    //check if start time of slot is atleast 12 hours after current time
+    if ((user.slotBooked as Slot).startTime.getTime() - Date.now() < 12 * 60 * 60 * 1000) {
+      return next({
+        ...customErrors.conflict(customErrorDescriptions.cannotChangeWithin12Hours),
+        error: new Error(customErrorDescriptions.cannotChangeWithin12Hours),
+      });
+    }
+
 
     const oldSlot = await slotModel.findById(user.slotBooked);
     if (!oldSlot) {
@@ -140,6 +156,12 @@ const appController: AppControllerSchema = {
         error: new Error(customErrorDescriptions.slotNotFound),
       });
     }
+    if(slot.startTime < new Date()) {
+      return next({
+        ...customErrors.conflict(customErrorDescriptions.slotAlreadyStarted),
+        error: new Error(customErrorDescriptions.slotAlreadyStarted),
+      });
+    }
     slot.slotBookedBy = slot.slotBookedBy.filter((id) => id !== user._id);
     user.slotBooked = null;
     await Promise.all([slot.save(), user.save()]);
@@ -150,7 +172,7 @@ const appController: AppControllerSchema = {
   },
   getUserInfo: async (req, res, next) => {
     const userModel = getModelForClass(User);
-    const slotModel = getModelForClass(Slot);
+    getModelForClass(Slot);
     const user = await userModel
       .findOne({ email: req.user.email })
       .populate("slotBooked", "date startTime endTime");

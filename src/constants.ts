@@ -28,4 +28,6 @@ export const customErrorDescriptions = {
     slotAlreadyBooked: "Slot already booked",
     slotAlreadyChanged: "Slot already changed",
     slotNotBooked: "Slot not booked",
+    slotAlreadyStarted: "Slot already started",
+    cannotChangeWithin12Hours: "Cannot change slot within 12 hours of slot start time",
 }
