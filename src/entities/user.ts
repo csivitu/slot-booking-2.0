@@ -16,5 +16,5 @@ export class User {
   public isChangedSlot!: boolean;
 
   @prop({ref: () => Slot, default: null })
-  public slot!: Ref<Slot> | null;
+  public slotBooked!: Ref<Slot> | null;
 }

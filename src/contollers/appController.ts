@@ -55,7 +55,7 @@ const appController: AppControllerSchema = {
       });
     }
     slot.slotBookedBy.push(user);
-    user.slot = slot;
+    user.slotBooked = slot;
     await Promise.all([slot.save(), user.save()]);
     res.data = {
       slot,
@@ -92,7 +92,7 @@ const appController: AppControllerSchema = {
         error: new Error(customErrorDescriptions.slotAlreadyBooked),
       });
     }
-    if (!user.slot) {
+    if (!user.slotBooked) {
       return next({
         ...customErrors.conflict(customErrorDescriptions.slotNotBooked),
         error: new Error(customErrorDescriptions.slotNotBooked),
@@ -105,7 +105,7 @@ const appController: AppControllerSchema = {
       });
     }
 
-    const oldSlot = await slotModel.findById(user.slot);
+    const oldSlot = await slotModel.findById(user.slotBooked);
     if (!oldSlot) {
       return next({
         ...customErrors.notFound(customErrorDescriptions.slotNotFound),
@@ -115,7 +115,7 @@ const appController: AppControllerSchema = {
 
     oldSlot.slotBookedBy = oldSlot.slotBookedBy.filter((id) => id !== user._id);
     slot.slotBookedBy.push(user);
-    user.slot = slot;
+    user.slotBooked = slot;
     user.isChangedSlot = true;
     await Promise.all([slot.save(), user.save(), oldSlot.save()]);
     res.data = {
@@ -133,7 +133,7 @@ const appController: AppControllerSchema = {
       });
     }
     const slotModel = getModelForClass(Slot);
-    const slot = await slotModel.findById(user.slot);
+    const slot = await slotModel.findById(user.slotBooked);
     if (!slot) {
       return next({
         ...customErrors.notFound(customErrorDescriptions.slotNotFound),
@@ -141,7 +141,7 @@ const appController: AppControllerSchema = {
       });
     }
     slot.slotBookedBy = slot.slotBookedBy.filter((id) => id !== user._id);
-    user.slot = null;
+    user.slotBooked = null;
     await Promise.all([slot.save(), user.save()]);
     res.data = {
       slot,
@@ -150,9 +150,10 @@ const appController: AppControllerSchema = {
   },
   getUserInfo: async (req, res, next) => {
     const userModel = getModelForClass(User);
+    const slotModel = getModelForClass(Slot);
     const user = await userModel
       .findOne({ email: req.user.email })
-      .populate("slot", "date startTime endTime");
+      .populate("slotBooked", "date startTime endTime");
     if (!user) {
       return next({
         ...customErrors.notFound(customErrorDescriptions.userNotFound),
