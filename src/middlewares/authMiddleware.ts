@@ -5,7 +5,7 @@ import { User } from "../entities";
 import { verifyAccessToken } from "../helpers/jwtFuncs";
 
 const authMiddleware: RequestHandler = async (req, res, next) => {
-  const { authorization } = req.headers as { authorization: string };
+  const { authorization } = <{ authorization: string }>req.headers;
 
   if (!authorization) {
     return res.status(403).json({
@@ -27,7 +27,7 @@ const authMiddleware: RequestHandler = async (req, res, next) => {
         name: payload.name,
       });
     }
-    req.user = user as User;
+    req.user = <User>user;
     next();
   } catch (error) {
     next({

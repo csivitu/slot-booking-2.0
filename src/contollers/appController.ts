@@ -25,7 +25,7 @@ const appController: AppControllerSchema = {
     return next();
   },
   bookSlot: async (req, res, next) => {
-    const { slotId } = req.body as { slotId: string };
+    const { slotId } = <{ slotId: string }>req.body;
     const slotModel = getModelForClass(Slot);
     const userModel = getModelForClass(User);
     const user = await userModel.findOne({ email: req.user.email });
@@ -71,10 +71,12 @@ const appController: AppControllerSchema = {
     return next();
   },
   changeSlot: async (req, res, next) => {
-    const { slotId } = req.body as { slotId: string };
+    const { slotId } = <{ slotId: string }>req.body;
     const slotModel = getModelForClass(Slot);
     const userModel = getModelForClass(User);
-    const user = await userModel.findOne({ email: req.user.email }).populate("slotBooked");
+    const user = await userModel
+      .findOne({ email: req.user.email })
+      .populate("slotBooked");
     if (!user) {
       return next({
         ...customErrors.notFound(customErrorDescriptions.userNotFound),
@@ -113,13 +115,17 @@ const appController: AppControllerSchema = {
       });
     }
     //check if start time of slot is atleast 12 hours after current time
-    if ((user.slotBooked as Slot).startTime.getTime() - Date.now() < 12 * 60 * 60 * 1000) {
+    if (
+      (<Slot>user.slotBooked).startTime.getTime() - Date.now() <
+      12 * 60 * 60 * 1000
+    ) {
       return next({
-        ...customErrors.conflict(customErrorDescriptions.cannotChangeWithin12Hours),
+        ...customErrors.conflict(
+          customErrorDescriptions.cannotChangeWithin12Hours
+        ),
         error: new Error(customErrorDescriptions.cannotChangeWithin12Hours),
       });
     }
-
 
     const oldSlot = await slotModel.findById(user.slotBooked);
     if (!oldSlot) {
@@ -156,7 +162,7 @@ const appController: AppControllerSchema = {
         error: new Error(customErrorDescriptions.slotNotFound),
       });
     }
-    if(slot.startTime < new Date()) {
+    if (slot.startTime < new Date()) {
       return next({
         ...customErrors.conflict(customErrorDescriptions.slotAlreadyStarted),
         error: new Error(customErrorDescriptions.slotAlreadyStarted),

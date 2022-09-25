@@ -11,16 +11,14 @@ const checkResponseError = (err: unknown) => {
     error: Joi.any(),
   }).required();
 
-  return responseErrorSchema.validateAsync(err) as Promise<ResponseError>;
+  return <Promise<ResponseError>>responseErrorSchema.validateAsync(err);
 };
 
 const errorHandler: ErrorRequestHandler = async (err, req, res, next) => {
   try {
     const responseError = await checkResponseError(err);
 
-    const { code, message, error } = constructErrorObject(
-      responseError
-    );
+    const { code, message, error } = constructErrorObject(responseError);
 
     const response = {
       data: null,
@@ -32,7 +30,7 @@ const errorHandler: ErrorRequestHandler = async (err, req, res, next) => {
 
     res.status(code).json(response);
   } catch {
-    const error = serializeError(err as unknown);
+    const error = serializeError(<unknown>err);
 
     next(error);
   }

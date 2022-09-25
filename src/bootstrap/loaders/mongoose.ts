@@ -10,7 +10,7 @@ process.on("SIGINT", () => {
       process.exit(0);
     },
     (err) => {
-      console.error(serializeError(err as unknown));
+      console.error(serializeError(<unknown>err));
       process.exit(1);
     }
   );

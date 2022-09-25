@@ -7,7 +7,7 @@ export const verifyAccessToken = (token: string) => {
     if (typeof payload === "string") {
       throw new Error("Invalid token");
     }
-    return payload as { name: string; email: string };
+    return <{ name: string; email: string }>payload;
   } catch (error) {
     throw error;
   }

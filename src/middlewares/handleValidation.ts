@@ -6,7 +6,7 @@ import RequestProperties from "../types/requestProperties";
 const handleValidation = (schema: Joi.Schema, property: RequestProperties) => {
   const validate: RequestHandler = async (req, res, next) => {
     try {
-      const value = (await schema.validateAsync(req[property])) as unknown;
+      const value = <unknown>(await schema.validateAsync(req[property]));
 
       req[property] = value;
 
