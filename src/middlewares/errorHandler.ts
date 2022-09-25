@@ -14,7 +14,7 @@ const checkResponseError = (err: unknown) => {
   return <Promise<ResponseError>>responseErrorSchema.validateAsync(err);
 };
 
-const errorHandler: ErrorRequestHandler = async (err, req, res, next) => {
+const errorHandler = <ErrorRequestHandler>(async (err, req, res, next) => {
   try {
     const responseError = await checkResponseError(err);
 
@@ -34,6 +34,6 @@ const errorHandler: ErrorRequestHandler = async (err, req, res, next) => {
 
     next(error);
   }
-};
+});
 
 export default errorHandler;

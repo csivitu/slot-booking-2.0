@@ -20,10 +20,7 @@ router.post(
   handleValidation(bookSlotSchema, RequestProperties.BODY),
   appController.changeSlot
 );
-router.post(
-  "/cancelSlot",
-  appController.cancelSlot
-);
+router.post("/cancelSlot", appController.cancelSlot);
 router.get("/userInfo", appController.getUserInfo);
 
 export default router;

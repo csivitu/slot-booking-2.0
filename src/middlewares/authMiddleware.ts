@@ -4,7 +4,7 @@ import { customErrorDescriptions, customErrors } from "../constants";
 import { User } from "../entities";
 import { verifyAccessToken } from "../helpers/jwtFuncs";
 
-const authMiddleware: RequestHandler = async (req, res, next) => {
+const authMiddleware = <RequestHandler>(async (req, res, next) => {
   const { authorization } = <{ authorization: string }>req.headers;
 
   if (!authorization) {
@@ -17,7 +17,7 @@ const authMiddleware: RequestHandler = async (req, res, next) => {
   }
 
   try {
-    const payload = verifyAccessToken(authorization);
+    const payload = await verifyAccessToken(authorization);
     const userModel = getModelForClass(User);
     let user = await userModel.findOne({ email: payload.email });
     if (!user) {
@@ -25,6 +25,7 @@ const authMiddleware: RequestHandler = async (req, res, next) => {
       user = await userModel.create({
         email: payload.email,
         name: payload.name,
+        scopes: payload.scopes,
       });
     }
     req.user = <User>user;
@@ -35,6 +36,6 @@ const authMiddleware: RequestHandler = async (req, res, next) => {
       error,
     });
   }
-};
+});
 
 export default authMiddleware;

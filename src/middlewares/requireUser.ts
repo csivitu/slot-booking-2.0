@@ -7,6 +7,7 @@ const requireUser: RequestHandler = (req, res, next) => {
       ...customErrors.notAuthorized(customErrorDescriptions.unableToDecodeJWT),
       error: new Error(customErrorDescriptions.unableToDecodeJWT),
     });
+    return;
   }
   next();
 };

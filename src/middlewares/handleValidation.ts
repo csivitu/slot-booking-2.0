@@ -4,9 +4,9 @@ import { customErrorDescriptions, customErrors } from "../constants";
 import RequestProperties from "../types/requestProperties";
 
 const handleValidation = (schema: Joi.Schema, property: RequestProperties) => {
-  const validate: RequestHandler = async (req, res, next) => {
+  const validate = <RequestHandler>(async (req, res, next) => {
     try {
-      const value = <unknown>(await schema.validateAsync(req[property]));
+      const value = <unknown>await schema.validateAsync(req[property]);
 
       req[property] = value;
 
@@ -28,7 +28,7 @@ const handleValidation = (schema: Joi.Schema, property: RequestProperties) => {
         error,
       });
     }
-  };
+  });
 
   return validate;
 };

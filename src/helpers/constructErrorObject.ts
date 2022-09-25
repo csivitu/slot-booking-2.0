@@ -10,7 +10,6 @@ const constructErrorObject = (err: ResponseError) => {
   } = err;
 
   if (error) {
-
     // if (process.env.NODE_ENV !== "production") // TO-DO: uncomment this line
     return { code, message, error: serializeError(error) };
   }

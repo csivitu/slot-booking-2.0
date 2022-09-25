@@ -8,6 +8,6 @@ export class Slot {
   @prop({ required: true })
   public endTime!: Date;
 
-  @prop({ required: true, ref: () => User, default:[] })
+  @prop({ required: true, ref: () => User, default: [] })
   public slotBookedBy!: Ref<User>[];
 }

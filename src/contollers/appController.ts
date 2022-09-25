@@ -1,19 +1,12 @@
 import { getModelForClass } from "@typegoose/typegoose";
 import { RequestHandler } from "express";
+import { Types } from "mongoose";
 import { config } from "../config";
 import { customErrors, customErrorDescriptions } from "../constants";
 import { Slot, User } from "../entities";
 
-interface AppControllerSchema {
-  getSlots: RequestHandler;
-  bookSlot: RequestHandler;
-  changeSlot: RequestHandler;
-  cancelSlot: RequestHandler;
-  getUserInfo: RequestHandler;
-}
-
-const appController: AppControllerSchema = {
-  getSlots: async (req, res, next) => {
+const appController = {
+  getSlots: <RequestHandler>(async (req, res, next) => {
     const slotModel = getModelForClass(Slot);
     const slots = await slotModel
       .find({})
@@ -22,44 +15,49 @@ const appController: AppControllerSchema = {
     res.data = {
       slots,
     };
-    return next();
-  },
-  bookSlot: async (req, res, next) => {
+    next();
+  }),
+  bookSlot: <RequestHandler>(async (req, res, next) => {
     const { slotId } = <{ slotId: string }>req.body;
     const slotModel = getModelForClass(Slot);
     const userModel = getModelForClass(User);
     const user = await userModel.findOne({ email: req.user.email });
     if (!user) {
-      return next({
+      next({
         ...customErrors.notFound(customErrorDescriptions.userNotFound),
         error: new Error(customErrorDescriptions.userNotFound),
       });
+      return;
     }
     const slot = await slotModel.findById(slotId);
     if (!slot) {
-      return next({
+      next({
         ...customErrors.notFound(customErrorDescriptions.slotNotFound),
         error: new Error(customErrorDescriptions.slotNotFound),
       });
+      return;
     }
     if (slot.slotBookedBy.length >= config.slotCapacity) {
-      return next({
+      next({
         ...customErrors.conflict(customErrorDescriptions.slotFull),
         error: new Error(customErrorDescriptions.slotFull),
       });
+      return;
     }
-    if (slot.slotBookedBy.includes(user._id)) {
-      return next({
+    if (slot.slotBookedBy.includes(<Types.ObjectId>user._id)) {
+      next({
         ...customErrors.conflict(customErrorDescriptions.slotAlreadyBooked),
         error: new Error(customErrorDescriptions.slotAlreadyBooked),
       });
+      return;
     }
     // check if slot time is after current time
     if (slot.startTime.getTime() < new Date().getTime()) {
-      return next({
+      next({
         ...customErrors.conflict(customErrorDescriptions.slotAlreadyStarted),
         error: new Error(customErrorDescriptions.slotAlreadyStarted),
       });
+      return;
     }
 
     slot.slotBookedBy.push(user);
@@ -68,9 +66,9 @@ const appController: AppControllerSchema = {
     res.data = {
       slot,
     };
-    return next();
-  },
-  changeSlot: async (req, res, next) => {
+    next();
+  }),
+  changeSlot: <RequestHandler>(async (req, res, next) => {
     const { slotId } = <{ slotId: string }>req.body;
     const slotModel = getModelForClass(Slot);
     const userModel = getModelForClass(User);
@@ -78,61 +76,69 @@ const appController: AppControllerSchema = {
       .findOne({ email: req.user.email })
       .populate("slotBooked");
     if (!user) {
-      return next({
+      next({
         ...customErrors.notFound(customErrorDescriptions.userNotFound),
         error: new Error(customErrorDescriptions.userNotFound),
       });
+      return;
     }
     const slot = await slotModel.findById(slotId);
     if (!slot) {
-      return next({
+      next({
         ...customErrors.notFound(customErrorDescriptions.slotNotFound),
         error: new Error(customErrorDescriptions.slotNotFound),
       });
+      return;
     }
     if (slot.slotBookedBy.length >= config.slotCapacity) {
-      return next({
+      next({
         ...customErrors.conflict(customErrorDescriptions.slotFull),
         error: new Error(customErrorDescriptions.slotFull),
       });
+      return;
     }
-    if (slot.slotBookedBy.includes(user._id)) {
-      return next({
+    if (slot.slotBookedBy.includes(<Types.ObjectId>user._id)) {
+      next({
         ...customErrors.conflict(customErrorDescriptions.slotAlreadyBooked),
         error: new Error(customErrorDescriptions.slotAlreadyBooked),
       });
+      return;
     }
     if (!user.slotBooked) {
-      return next({
+      next({
         ...customErrors.conflict(customErrorDescriptions.slotNotBooked),
         error: new Error(customErrorDescriptions.slotNotBooked),
       });
+      return;
     }
     if (user.isChangedSlot) {
-      return next({
+      next({
         ...customErrors.conflict(customErrorDescriptions.slotAlreadyChanged),
         error: new Error(customErrorDescriptions.slotAlreadyChanged),
       });
+      return;
     }
     //check if start time of slot is atleast 12 hours after current time
     if (
       (<Slot>user.slotBooked).startTime.getTime() - Date.now() <
       12 * 60 * 60 * 1000
     ) {
-      return next({
+      next({
         ...customErrors.conflict(
           customErrorDescriptions.cannotChangeWithin12Hours
         ),
         error: new Error(customErrorDescriptions.cannotChangeWithin12Hours),
       });
+      return;
     }
 
     const oldSlot = await slotModel.findById(user.slotBooked);
     if (!oldSlot) {
-      return next({
+      next({
         ...customErrors.notFound(customErrorDescriptions.slotNotFound),
         error: new Error(customErrorDescriptions.slotNotFound),
       });
+      return;
     }
 
     oldSlot.slotBookedBy = oldSlot.slotBookedBy.filter((id) => id !== user._id);
@@ -143,30 +149,33 @@ const appController: AppControllerSchema = {
     res.data = {
       slot,
     };
-    return next();
-  },
-  cancelSlot: async (req, res, next) => {
+    next();
+  }),
+  cancelSlot: <RequestHandler>(async (req, res, next) => {
     const userModel = getModelForClass(User);
     const user = await userModel.findOne({ email: req.user.email });
     if (!user) {
-      return next({
+      next({
         ...customErrors.notFound(customErrorDescriptions.userNotFound),
         error: new Error(customErrorDescriptions.userNotFound),
       });
+      return;
     }
     const slotModel = getModelForClass(Slot);
     const slot = await slotModel.findById(user.slotBooked);
     if (!slot) {
-      return next({
+      next({
         ...customErrors.notFound(customErrorDescriptions.slotNotFound),
         error: new Error(customErrorDescriptions.slotNotFound),
       });
+      return;
     }
     if (slot.startTime < new Date()) {
-      return next({
+      next({
         ...customErrors.conflict(customErrorDescriptions.slotAlreadyStarted),
         error: new Error(customErrorDescriptions.slotAlreadyStarted),
       });
+      return;
     }
     slot.slotBookedBy = slot.slotBookedBy.filter((id) => id !== user._id);
     user.slotBooked = null;
@@ -174,25 +183,26 @@ const appController: AppControllerSchema = {
     res.data = {
       slot,
     };
-    return next();
-  },
-  getUserInfo: async (req, res, next) => {
+    next();
+  }),
+  getUserInfo: <RequestHandler>(async (req, res, next) => {
     const userModel = getModelForClass(User);
     getModelForClass(Slot);
     const user = await userModel
       .findOne({ email: req.user.email })
       .populate("slotBooked", "date startTime endTime");
     if (!user) {
-      return next({
+      next({
         ...customErrors.notFound(customErrorDescriptions.userNotFound),
         error: new Error(customErrorDescriptions.userNotFound),
       });
+      return;
     }
     res.data = {
       user,
     };
-    return next();
-  },
+    next();
+  }),
 };
 
 export default appController;

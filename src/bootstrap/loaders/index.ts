@@ -4,7 +4,9 @@ import express from "express";
 import expressLoader from "./express";
 import mongooseLoader from "./mongoose";
 
-export default async (app: express.Application): Promise<express.Application> => {
+export default async (
+  app: express.Application
+): Promise<express.Application> => {
   // Load everything related to express
   expressLoader(app);
 

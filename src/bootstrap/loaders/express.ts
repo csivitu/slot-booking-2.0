@@ -10,15 +10,15 @@ export default (app: express.Application) => {
   app.use(express.json());
 
   // Cors configuration
-  // app.use(cors());
+  app.use(cors());
 
   //cookie parser
   app.use(cookieParser());
-  
+
   app.use("/v1", v1);
   app.use(responseHandler);
-  app.use(errorHandler)
+  app.use(errorHandler);
 
   // Sets various HTTP headers to help protect our app
-//   if (process.env.NODE_ENV === "production") app.use(helmet());
+  //   if (process.env.NODE_ENV === "production") app.use(helmet());
 };
