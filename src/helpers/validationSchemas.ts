@@ -23,7 +23,7 @@ export const adminCancelSlotSchema = Joi.object({
 export const payloadSchema = Joi.object({
   name: Joi.string().required(),
   email: Joi.string().email().required(),
-  scopes: Joi.array()
+  scope: Joi.array()
     .items(Joi.string().valid(...Object.values(ScopeTypes)))
     .required(),
 }).required();

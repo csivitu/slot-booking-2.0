@@ -25,7 +25,7 @@ const authMiddleware = <RequestHandler>(async (req, res, next) => {
       user = await userModel.create({
         email: payload.email,
         name: payload.name,
-        scopes: payload.scopes,
+        scope: payload.scope,
       });
     }
     req.user = <User>user;

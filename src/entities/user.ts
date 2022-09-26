@@ -23,5 +23,5 @@ export class User {
     type: () => [String],
     default: [ScopeTypes.USER],
   })
-  public scopes!: string[];
+  public scope!: string[];
 }

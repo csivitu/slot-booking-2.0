@@ -9,5 +9,5 @@ export const verifyAccessToken = async (token: string) => {
     throw new Error("Invalid token");
   }
   await payloadSchema.validateAsync(payload);
-  return <{ name: string; email: string; scopes: ScopeTypes[] }>payload;
+  return <{ name: string; email: string; scope: ScopeTypes[] }>payload;
 };
