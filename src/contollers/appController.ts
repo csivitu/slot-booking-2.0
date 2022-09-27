@@ -153,7 +153,11 @@ const appController = {
       return;
     }
 
-    oldSlot.slotBookedBy = oldSlot.slotBookedBy.filter((id) => id !== user._id);
+    oldSlot.slotBookedBy = oldSlot.slotBookedBy.filter(
+      (id) =>
+        (<Types.ObjectId>id).toString() !==
+        (<Types.ObjectId>user._id).toString()
+    );
     slot.slotBookedBy.push(user);
     user.slotBooked = slot;
     user.isChangedSlot = true;
@@ -196,7 +200,11 @@ const appController = {
       });
       return;
     }
-    slot.slotBookedBy = slot.slotBookedBy.filter((id) => id !== user._id);
+    slot.slotBookedBy = slot.slotBookedBy.filter(
+      (id) =>
+        (<Types.ObjectId>id).toString() !==
+        (<Types.ObjectId>user._id).toString()
+    );
     user.slotBooked = null;
     await Promise.all([slot.save(), user.save()]);
     res.data = {

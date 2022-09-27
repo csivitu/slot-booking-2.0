@@ -121,7 +121,9 @@ const adminController = {
         });
       }
       oldSlot.slotBookedBy = oldSlot.slotBookedBy.filter(
-        (id) => id !== user._id
+        (id) =>
+          (<Types.ObjectId>id).toString() !==
+          (<Types.ObjectId>user._id).toString()
       );
       slot.slotBookedBy.push(user);
       user.slotBooked = slot;
@@ -185,7 +187,9 @@ const adminController = {
       }
 
       slot.slotBookedBy = slot.slotBookedBy.filter(
-        (id) => id !== <Types.ObjectId>user._id
+        (id) =>
+          (<Types.ObjectId>id).toString() !==
+          (<Types.ObjectId>user._id).toString()
       );
       user.slotBooked = null;
       await Promise.all([slot.save(), user.save()]);
