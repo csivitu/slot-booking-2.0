@@ -23,7 +23,9 @@ const appController = {
     const { slotId } = <{ slotId: string }>req.body;
     const slotModel = getModelForClass(Slot);
     const userModel = getModelForClass(User);
-    const user = await userModel.findOne({ username: req.user.username });
+    const user = await userModel
+      .findOne({ username: req.user.username })
+      .populate("slotBooked", "startTime endTime");
     if (!user) {
       next({
         ...customErrors.notFound(customErrorDescriptions.userNotFound),
@@ -86,7 +88,7 @@ const appController = {
     const userModel = getModelForClass(User);
     const user = await userModel
       .findOne({ username: req.user.username })
-      .populate("slotBooked");
+      .populate("slotBooked", "startTime endTime");
     if (!user) {
       next({
         ...customErrors.notFound(customErrorDescriptions.userNotFound),
@@ -169,7 +171,9 @@ const appController = {
   }),
   cancelSlot: <RequestHandler>(async (req, res, next) => {
     const userModel = getModelForClass(User);
-    const user = await userModel.findOne({ username: req.user.username });
+    const user = await userModel
+      .findOne({ username: req.user.username })
+      .populate("slotBooked", "startTime endTime");
     if (!user) {
       next({
         ...customErrors.notFound(customErrorDescriptions.userNotFound),
@@ -217,7 +221,7 @@ const appController = {
     getModelForClass(Slot);
     const user = await userModel
       .findOne({ username: req.user.username })
-      .populate("slotBooked", "date startTime endTime");
+      .populate("slotBooked", "startTime endTime");
     if (!user) {
       next({
         ...customErrors.notFound(customErrorDescriptions.userNotFound),
