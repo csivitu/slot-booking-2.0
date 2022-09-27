@@ -28,6 +28,7 @@ export interface Config {
     path: string;
   };
   clientUrl: string;
+  serverUrl: string;
 }
 
 // All your secrets, keys go here
@@ -47,4 +48,5 @@ export const config: Config = {
     path: env("EMAILER_PATH"),
   },
   clientUrl: env("CLIENT_URL"),
+  serverUrl: env("SERVER_URL"),
 };

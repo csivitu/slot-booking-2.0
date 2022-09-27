@@ -68,7 +68,7 @@ const appController = {
       return;
     }
 
-    const qr = await generateQR(user.username);
+    const qr = await generateQR(`${config.serverUrl}/${user.username}`);
     slot.slotBookedBy.push(user);
     user.slotBooked = slot;
     user.qrCode = qr ? qr : null;
