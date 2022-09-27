@@ -208,6 +208,7 @@ const appController = {
         (<Types.ObjectId>user._id).toString()
     );
     user.slotBooked = null;
+    user.isChangedSlot = true;
     await Promise.all([slot.save(), user.save()]);
     res.data = {
       user,
