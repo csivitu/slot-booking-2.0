@@ -180,6 +180,13 @@ const appController = {
       });
       return;
     }
+    if (user.isChangedSlot) {
+      next({
+        ...customErrors.conflict(customErrorDescriptions.slotAlreadyChanged),
+        error: new Error(customErrorDescriptions.slotAlreadyChanged),
+      });
+      return;
+    }
     const slot = await slotModel.findById(user.slotBooked);
     if (!slot) {
       next({
@@ -188,7 +195,7 @@ const appController = {
       });
       return;
     }
-    if (slot.startTime < new Date()) {
+    if (slot.startTime.getTime() - Date.now() < 12 * 60 * 60 * 1000) {
       next({
         ...customErrors.conflict(customErrorDescriptions.slotAlreadyStarted),
         error: new Error(customErrorDescriptions.slotAlreadyStarted),
