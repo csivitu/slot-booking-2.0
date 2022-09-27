@@ -86,9 +86,7 @@ const appController = {
     const { slotId } = <{ slotId: string }>req.body;
     const slotModel = getModelForClass(Slot);
     const userModel = getModelForClass(User);
-    const user = await userModel
-      .findOne({ username: req.user.username })
-      .populate("slotBooked", "startTime endTime");
+    const user = await userModel.findOne({ username: req.user.username });
     if (!user) {
       next({
         ...customErrors.notFound(customErrorDescriptions.userNotFound),
