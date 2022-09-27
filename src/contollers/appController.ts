@@ -170,6 +170,7 @@ const appController = {
     next();
   }),
   cancelSlot: <RequestHandler>(async (req, res, next) => {
+    const slotModel = getModelForClass(Slot);
     const userModel = getModelForClass(User);
     const user = await userModel
       .findOne({ username: req.user.username })
@@ -181,7 +182,6 @@ const appController = {
       });
       return;
     }
-    const slotModel = getModelForClass(Slot);
     const slot = await slotModel.findById(user.slotBooked);
     if (!slot) {
       next({
