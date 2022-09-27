@@ -27,4 +27,10 @@ export class User {
     default: [ScopeTypes.USER],
   })
   public scope!: string[];
+
+  @prop({ default: null })
+  public qrCode!: string | null;
+
+  @prop({ default: false })
+  public isScanned!: boolean;
 }

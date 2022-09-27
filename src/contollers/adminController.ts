@@ -221,6 +221,40 @@ const adminController = {
       return next({ ...customErrors.internalServerError(), error: err });
     }
   }),
+  scanQR: <RequestHandler>(async (req, res, next) => {
+    try {
+      if (!req.user.scope.includes("admin")) {
+        return res.redirect(config.clientUrl);
+      }
+      const { username } = <{ username: string }>req.params;
+      const userModel = getModelForClass(User);
+      getModelForClass(Slot);
+      const user = await userModel
+        .findOne({ username })
+        .populate("slotBooked", "startTime endTime");
+      if (!user) {
+        return next({
+          ...customErrors.notFound(customErrorDescriptions.userNotFound),
+          error: new Error(customErrorDescriptions.userNotFound),
+        });
+      }
+      if (user.isScanned) {
+        return next({
+          ...customErrors.conflict(customErrorDescriptions.alreadyScanned),
+          error: new Error(customErrorDescriptions.alreadyScanned),
+        });
+      }
+      user.isScanned = true;
+      await user.save();
+      res.data = {
+        user,
+      };
+      next();
+    } catch (err) {
+      return next({ ...customErrors.internalServerError(), error: err });
+    }
+  }),
+
   getUsers: <RequestHandler>(async (req, res, next) => {
     try {
       const userModel = getModelForClass(User);

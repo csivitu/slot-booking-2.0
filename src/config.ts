@@ -27,6 +27,7 @@ export interface Config {
     auth: string;
     path: string;
   };
+  clientUrl: string;
 }
 
 // All your secrets, keys go here
@@ -45,4 +46,5 @@ export const config: Config = {
     auth: env("EMAILER_AUTH"),
     path: env("EMAILER_PATH"),
   },
+  clientUrl: env("CLIENT_URL"),
 };

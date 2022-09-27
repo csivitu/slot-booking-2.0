@@ -6,7 +6,7 @@ export const generateQR = async (text: string) => {
       type: "svg",
     };
 
-    console.log(await QRCode.toString(text, opts));
+    return await QRCode.toString(text, opts);
   } catch (err) {
     console.error(err);
   }

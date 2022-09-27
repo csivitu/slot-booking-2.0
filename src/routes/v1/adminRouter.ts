@@ -13,6 +13,13 @@ import RequestProperties from "../../types/requestProperties";
 const router = Router();
 
 router.use(requireUser);
+
+router.get(
+  "/scan/:username",
+  handleValidation(adminCancelSlotSchema, RequestProperties.PARAMS),
+  adminController.scanQR
+);
+
 router.use(requireAdmin);
 
 router.get("/slots", appController.getSlots);

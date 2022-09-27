@@ -5,7 +5,7 @@ import v1 from "../../routes/v1";
 import errorHandler from "../../middlewares/errorHandler";
 import responseHandler from "../../middlewares/responseHandler";
 import { config } from "../../config";
-import limiter from "../../helpers/rateLimiter";
+// import limiter from "../../helpers/rateLimiter";
 
 export default (app: express.Application) => {
   app.use(express.json());
@@ -22,7 +22,7 @@ export default (app: express.Application) => {
   // Sets various HTTP headers to help protect our app
   if (!config.isDev) {
     app.use(helmet());
-    app.use(limiter);
+    // app.use(limiter);
   }
 
   app.use("/v1", v1);

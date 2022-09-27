@@ -4,6 +4,7 @@ import { Types } from "mongoose";
 import { config } from "../config";
 import { customErrors, customErrorDescriptions } from "../constants";
 import { Slot, User } from "../entities";
+import { generateQR } from "../helpers/generateQR";
 import { sendSlotBookedMail } from "../helpers/sendMail";
 
 const appController = {
@@ -67,13 +68,16 @@ const appController = {
       return;
     }
 
+    const qr = await generateQR(user.username);
     slot.slotBookedBy.push(user);
     user.slotBooked = slot;
+    user.qrCode = qr ? qr : null;
     await Promise.all([slot.save(), user.save()]);
     await sendSlotBookedMail(
       {
         name: user.name,
         username: user.username,
+        qrCode: user.qrCode ? user.qrCode : undefined,
       },
       user.email
     );
