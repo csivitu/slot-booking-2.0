@@ -4,6 +4,9 @@ import { Slot } from "./slot";
 
 export class User {
   @prop({ required: true })
+  public username!: string;
+
+  @prop({ required: true })
   public name!: string;
 
   @prop({ required: true, index: true, unique: true })

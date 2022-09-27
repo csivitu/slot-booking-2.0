@@ -22,7 +22,7 @@ router.post(
   adminController.bookSlot
 );
 router.post(
-  "changeSlot",
+  "/changeSlot",
   handleValidation(adminBookSlotSchema, RequestProperties.BODY),
   appController.changeSlot
 );
@@ -32,7 +32,7 @@ router.post(
   appController.cancelSlot
 );
 router.get(
-  "/userInfo/:email",
+  "/userInfo/:username",
   handleValidation(adminCancelSlotSchema, RequestProperties.PARAMS),
   adminController.getUserInfo
 );

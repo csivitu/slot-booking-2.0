@@ -8,6 +8,8 @@ export const verifyAccessToken = async (token: string) => {
   if (typeof payload === "string") {
     throw new Error("Invalid token");
   }
-  await payloadSchema.validateAsync(payload, {stripUnknown:true});
-  return <{ name: string; email: string; scope: ScopeTypes[] }>payload;
+  await payloadSchema.validateAsync(payload, { stripUnknown: true });
+  return <
+    { name: string; username: string; email: string; scope: ScopeTypes[] }
+  >payload;
 };

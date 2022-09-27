@@ -13,15 +13,16 @@ export const bookSlotSchema = Joi.object({
 
 export const adminBookSlotSchema = Joi.object({
   slotId: Joi.string().required(),
-  email: Joi.string().email().required(),
+  username: Joi.string().min(3).max(20).required(),
 }).required();
 
 export const adminCancelSlotSchema = Joi.object({
-  email: Joi.string().email().required(),
+  username: Joi.string().min(3).max(20).required(),
 }).required();
 
 export const payloadSchema = Joi.object({
   name: Joi.string().required(),
+  username: Joi.string().min(3).max(20).required(),
   email: Joi.string().email().required(),
   scope: Joi.array()
     .items(Joi.string().valid(...Object.values(ScopeTypes)))

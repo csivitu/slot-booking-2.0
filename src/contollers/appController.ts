@@ -11,7 +11,8 @@ const appController = {
     const slots = await slotModel
       .find({})
       .sort({ date: 1, startTime: 1 })
-      .populate("slotBookedBy", "name");
+      .populate("slotBookedBy", "name username");
+
     res.data = {
       slots,
     };
@@ -21,7 +22,7 @@ const appController = {
     const { slotId } = <{ slotId: string }>req.body;
     const slotModel = getModelForClass(Slot);
     const userModel = getModelForClass(User);
-    const user = await userModel.findOne({ email: req.user.email });
+    const user = await userModel.findOne({ username: req.user.username });
     if (!user) {
       next({
         ...customErrors.notFound(customErrorDescriptions.userNotFound),
@@ -37,14 +38,10 @@ const appController = {
       });
       return;
     }
-    if (slot.slotBookedBy.length >= config.slotCapacity) {
-      next({
-        ...customErrors.conflict(customErrorDescriptions.slotFull),
-        error: new Error(customErrorDescriptions.slotFull),
-      });
-      return;
-    }
-    if (slot.slotBookedBy.includes(<Types.ObjectId>user._id)) {
+    if (
+      user.slotBooked ||
+      slot.slotBookedBy.includes(<Types.ObjectId>user._id)
+    ) {
       next({
         ...customErrors.conflict(customErrorDescriptions.slotAlreadyBooked),
         error: new Error(customErrorDescriptions.slotAlreadyBooked),
@@ -56,6 +53,13 @@ const appController = {
       next({
         ...customErrors.conflict(customErrorDescriptions.slotAlreadyStarted),
         error: new Error(customErrorDescriptions.slotAlreadyStarted),
+      });
+      return;
+    }
+    if (slot.slotBookedBy.length >= config.slotCapacity) {
+      next({
+        ...customErrors.conflict(customErrorDescriptions.slotFull),
+        error: new Error(customErrorDescriptions.slotFull),
       });
       return;
     }
@@ -73,7 +77,7 @@ const appController = {
     const slotModel = getModelForClass(Slot);
     const userModel = getModelForClass(User);
     const user = await userModel
-      .findOne({ email: req.user.email })
+      .findOne({ username: req.user.username })
       .populate("slotBooked");
     if (!user) {
       next({
@@ -87,20 +91,6 @@ const appController = {
       next({
         ...customErrors.notFound(customErrorDescriptions.slotNotFound),
         error: new Error(customErrorDescriptions.slotNotFound),
-      });
-      return;
-    }
-    if (slot.slotBookedBy.length >= config.slotCapacity) {
-      next({
-        ...customErrors.conflict(customErrorDescriptions.slotFull),
-        error: new Error(customErrorDescriptions.slotFull),
-      });
-      return;
-    }
-    if (slot.slotBookedBy.includes(<Types.ObjectId>user._id)) {
-      next({
-        ...customErrors.conflict(customErrorDescriptions.slotAlreadyBooked),
-        error: new Error(customErrorDescriptions.slotAlreadyBooked),
       });
       return;
     }
@@ -118,7 +108,6 @@ const appController = {
       });
       return;
     }
-    //check if start time of slot is atleast 12 hours after current time
     if (
       (<Slot>user.slotBooked).startTime.getTime() - Date.now() <
       12 * 60 * 60 * 1000
@@ -131,6 +120,21 @@ const appController = {
       });
       return;
     }
+    if (slot.slotBookedBy.length >= config.slotCapacity) {
+      next({
+        ...customErrors.conflict(customErrorDescriptions.slotFull),
+        error: new Error(customErrorDescriptions.slotFull),
+      });
+      return;
+    }
+    if (slot.slotBookedBy.includes(<Types.ObjectId>user._id)) {
+      next({
+        ...customErrors.conflict(customErrorDescriptions.slotAlreadyBooked),
+        error: new Error(customErrorDescriptions.slotAlreadyBooked),
+      });
+      return;
+    }
+    //check if start time of slot is atleast 12 hours after current time
 
     const oldSlot = await slotModel.findById(user.slotBooked);
     if (!oldSlot) {
@@ -153,7 +157,7 @@ const appController = {
   }),
   cancelSlot: <RequestHandler>(async (req, res, next) => {
     const userModel = getModelForClass(User);
-    const user = await userModel.findOne({ email: req.user.email });
+    const user = await userModel.findOne({ username: req.user.username });
     if (!user) {
       next({
         ...customErrors.notFound(customErrorDescriptions.userNotFound),
@@ -177,6 +181,13 @@ const appController = {
       });
       return;
     }
+    if (!user.slotBooked) {
+      next({
+        ...customErrors.conflict(customErrorDescriptions.slotNotBooked),
+        error: new Error(customErrorDescriptions.slotNotBooked),
+      });
+      return;
+    }
     slot.slotBookedBy = slot.slotBookedBy.filter((id) => id !== user._id);
     user.slotBooked = null;
     await Promise.all([slot.save(), user.save()]);
@@ -189,7 +200,7 @@ const appController = {
     const userModel = getModelForClass(User);
     getModelForClass(Slot);
     const user = await userModel
-      .findOne({ email: req.user.email })
+      .findOne({ username: req.user.username })
       .populate("slotBooked", "date startTime endTime");
     if (!user) {
       next({

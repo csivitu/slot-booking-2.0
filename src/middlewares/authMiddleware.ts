@@ -19,10 +19,11 @@ const authMiddleware = <RequestHandler>(async (req, res, next) => {
   try {
     const payload = await verifyAccessToken(authorization);
     const userModel = getModelForClass(User);
-    let user = await userModel.findOne({ email: payload.email });
+    let user = await userModel.findOne({ username: payload.username });
     if (!user) {
       //create user
       user = await userModel.create({
+        username: payload.username,
         email: payload.email,
         name: payload.name,
         scope: payload.scope,
