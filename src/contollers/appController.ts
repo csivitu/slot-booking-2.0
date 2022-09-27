@@ -76,7 +76,7 @@ const appController = {
       user.email
     );
     res.data = {
-      slot,
+      user,
     };
     next();
   }),
@@ -163,7 +163,7 @@ const appController = {
     user.isChangedSlot = true;
     await Promise.all([slot.save(), user.save(), oldSlot.save()]);
     res.data = {
-      slot,
+      user,
     };
     next();
   }),
@@ -208,7 +208,7 @@ const appController = {
     user.slotBooked = null;
     await Promise.all([slot.save(), user.save()]);
     res.data = {
-      slot,
+      user,
     };
     next();
   }),
