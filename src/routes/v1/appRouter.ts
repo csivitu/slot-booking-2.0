@@ -16,7 +16,7 @@ router.post(
   appController.bookSlot
 );
 router.post(
-  "changeSlot",
+  "/changeSlot",
   handleValidation(bookSlotSchema, RequestProperties.BODY),
   appController.changeSlot
 );
