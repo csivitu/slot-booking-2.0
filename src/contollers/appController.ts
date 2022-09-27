@@ -4,6 +4,7 @@ import { Types } from "mongoose";
 import { config } from "../config";
 import { customErrors, customErrorDescriptions } from "../constants";
 import { Slot, User } from "../entities";
+import { sendSlotBookedMail } from "../helpers/sendMail";
 
 const appController = {
   getSlots: <RequestHandler>(async (req, res, next) => {
@@ -67,6 +68,13 @@ const appController = {
     slot.slotBookedBy.push(user);
     user.slotBooked = slot;
     await Promise.all([slot.save(), user.save()]);
+    await sendSlotBookedMail(
+      {
+        name: user.name,
+        username: user.username,
+      },
+      user.email
+    );
     res.data = {
       slot,
     };

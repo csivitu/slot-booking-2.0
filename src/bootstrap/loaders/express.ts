@@ -9,6 +9,7 @@ import limiter from "../../helpers/rateLimiter";
 
 export default (app: express.Application) => {
   app.use(express.json());
+  app.set("view engine", "ejs");
 
   // Cors configuration
   app.use(

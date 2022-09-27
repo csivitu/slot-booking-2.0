@@ -22,6 +22,11 @@ export interface Config {
     secret: string;
   };
   slotCapacity: number;
+  emailer: {
+    host: string;
+    auth: string;
+    path: string;
+  };
 }
 
 // All your secrets, keys go here
@@ -35,4 +40,9 @@ export const config: Config = {
     secret: env("JWT_SECRET"),
   },
   slotCapacity: 10,
+  emailer: {
+    host: env("EMAILER_HOST"),
+    auth: env("EMAILER_AUTH"),
+    path: env("EMAILER_PATH"),
+  },
 };
