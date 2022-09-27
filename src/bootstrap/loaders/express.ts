@@ -1,10 +1,11 @@
 import express from "express";
 import cors from "cors";
-// import helmet from "helmet";
-import cookieParser from "cookie-parser";
+import helmet from "helmet";
 import v1 from "../../routes/v1";
 import errorHandler from "../../middlewares/errorHandler";
 import responseHandler from "../../middlewares/responseHandler";
+import { config } from "../../config";
+import limiter from "../../helpers/rateLimiter";
 
 export default (app: express.Application) => {
   app.use(express.json());
@@ -17,8 +18,11 @@ export default (app: express.Application) => {
     })
   );
 
-  //cookie parser
-  app.use(cookieParser());
+  // Sets various HTTP headers to help protect our app
+  if (!config.isDev) {
+    app.use(helmet());
+    app.use(limiter);
+  }
 
   app.use("/v1", v1);
   app.use(responseHandler);

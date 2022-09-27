@@ -54,6 +54,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-plugin-import", "virtual:1ee8db1a1390875f1fb98de7ff741e70db359d872f58e059ab16cbfb02bbdc77fe2d94fa60f3b2cdf93ec02753573fc8fdaa5cb636b6f551229fea623e298366#npm:2.26.0"],\
             ["eslint-plugin-prettier", "virtual:1ee8db1a1390875f1fb98de7ff741e70db359d872f58e059ab16cbfb02bbdc77fe2d94fa60f3b2cdf93ec02753573fc8fdaa5cb636b6f551229fea623e298366#npm:4.2.1"],\
             ["express", "npm:4.18.1"],\
+            ["express-rate-limit", "virtual:1ee8db1a1390875f1fb98de7ff741e70db359d872f58e059ab16cbfb02bbdc77fe2d94fa60f3b2cdf93ec02753573fc8fdaa5cb636b6f551229fea623e298366#npm:6.6.0"],\
+            ["helmet", "npm:6.0.0"],\
             ["husky", "npm:8.0.1"],\
             ["joi", "npm:17.6.0"],\
             ["jsonwebtoken", "npm:8.5.1"],\
@@ -2793,6 +2795,28 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["express-rate-limit", [\
+        ["npm:6.6.0", {\
+          "packageLocation": "./.yarn/cache/express-rate-limit-npm-6.6.0-d57a9b2fe2-056e26c30a.zip/node_modules/express-rate-limit/",\
+          "packageDependencies": [\
+            ["express-rate-limit", "npm:6.6.0"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:1ee8db1a1390875f1fb98de7ff741e70db359d872f58e059ab16cbfb02bbdc77fe2d94fa60f3b2cdf93ec02753573fc8fdaa5cb636b6f551229fea623e298366#npm:6.6.0", {\
+          "packageLocation": "./.yarn/__virtual__/express-rate-limit-virtual-bb5356ed79/0/cache/express-rate-limit-npm-6.6.0-d57a9b2fe2-056e26c30a.zip/node_modules/express-rate-limit/",\
+          "packageDependencies": [\
+            ["express-rate-limit", "virtual:1ee8db1a1390875f1fb98de7ff741e70db359d872f58e059ab16cbfb02bbdc77fe2d94fa60f3b2cdf93ec02753573fc8fdaa5cb636b6f551229fea623e298366#npm:6.6.0"],\
+            ["@types/express", "npm:4.17.14"],\
+            ["express", "npm:4.18.1"]\
+          ],\
+          "packagePeers": [\
+            "@types/express",\
+            "express"\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["fast-deep-equal", [\
         ["npm:3.1.3", {\
           "packageLocation": "./.yarn/cache/fast-deep-equal-npm-3.1.3-790edcfcf5-e21a9d8d84.zip/node_modules/fast-deep-equal/",\
@@ -3294,6 +3318,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/has-unicode-npm-2.0.1-893adb4747-1eab07a743.zip/node_modules/has-unicode/",\
           "packageDependencies": [\
             ["has-unicode", "npm:2.0.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["helmet", [\
+        ["npm:6.0.0", {\
+          "packageLocation": "./.yarn/cache/helmet-npm-6.0.0-2285459f57-0dd89d5b77.zip/node_modules/helmet/",\
+          "packageDependencies": [\
+            ["helmet", "npm:6.0.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -5657,6 +5690,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-plugin-import", "virtual:1ee8db1a1390875f1fb98de7ff741e70db359d872f58e059ab16cbfb02bbdc77fe2d94fa60f3b2cdf93ec02753573fc8fdaa5cb636b6f551229fea623e298366#npm:2.26.0"],\
             ["eslint-plugin-prettier", "virtual:1ee8db1a1390875f1fb98de7ff741e70db359d872f58e059ab16cbfb02bbdc77fe2d94fa60f3b2cdf93ec02753573fc8fdaa5cb636b6f551229fea623e298366#npm:4.2.1"],\
             ["express", "npm:4.18.1"],\
+            ["express-rate-limit", "virtual:1ee8db1a1390875f1fb98de7ff741e70db359d872f58e059ab16cbfb02bbdc77fe2d94fa60f3b2cdf93ec02753573fc8fdaa5cb636b6f551229fea623e298366#npm:6.6.0"],\
+            ["helmet", "npm:6.0.0"],\
             ["husky", "npm:8.0.1"],\
             ["joi", "npm:17.6.0"],\
             ["jsonwebtoken", "npm:8.5.1"],\
