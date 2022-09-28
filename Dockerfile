@@ -6,6 +6,7 @@ RUN yarn install
 COPY tsconfig.json tsconfig.json
 COPY @types @types
 COPY src src
+COPY views views
 RUN yarn run build
 RUN rm -r src @types tsconfig.json
 COPY .env ./ 

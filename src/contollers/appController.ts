@@ -242,6 +242,7 @@ const appController = {
     );
     user.slotBooked = null;
     user.isChangedSlot = true;
+    user.qrCode = null;
     await Promise.all([slot.save(), user.save()]);
     res.data = {
       user,
