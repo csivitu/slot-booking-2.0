@@ -248,6 +248,7 @@ const adminController = {
         });
       }
       user.isScanned = true;
+      user.isChangedSlot = true;
       await user.save();
       res.data = {
         user,
