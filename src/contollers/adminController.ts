@@ -224,7 +224,10 @@ const adminController = {
   scanQR: <RequestHandler>(async (req, res, next) => {
     try {
       if (!req.user.scope.includes("admin")) {
-        return res.redirect(config.clientUrl);
+        return next({
+          ...customErrors.notAuthorized(customErrorDescriptions.notAdmin),
+          error: new Error(customErrorDescriptions.notAdmin),
+        });
       }
       const { username } = <{ username: string }>req.params;
       const userModel = getModelForClass(User);
