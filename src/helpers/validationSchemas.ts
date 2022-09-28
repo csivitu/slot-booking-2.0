@@ -8,11 +8,11 @@ export const authorizationHeaderSchema = Joi.object({
   .unknown(true);
 
 export const bookSlotSchema = Joi.object({
-  slotId: Joi.string().required(),
+  slotId: Joi.string().hex().length(24).message("invalid object id").required(),
 }).required();
 
 export const adminBookSlotSchema = Joi.object({
-  slotId: Joi.string().required(),
+  slotId: Joi.string().hex().length(24).message("invalid object id").required(),
   username: Joi.string().min(3).max(20).required(),
 }).required();
 
