@@ -171,6 +171,13 @@ const appController = {
       });
       return;
     }
+    if (oldSlot.startTime.getTime() < new Date().getTime()) {
+      next({
+        ...customErrors.conflict(customErrorDescriptions.slotAlreadyStarted),
+        error: new Error(customErrorDescriptions.slotAlreadyStarted),
+      });
+      return;
+    }
 
     oldSlot.slotBookedBy = oldSlot.slotBookedBy.filter(
       (id) =>
