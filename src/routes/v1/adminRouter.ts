@@ -14,7 +14,7 @@ const router = Router();
 
 router.use(requireUser);
 
-router.get(
+router.post(
   "/scan/:username",
   handleValidation(adminCancelSlotSchema, RequestProperties.PARAMS),
   adminController.scanQR
