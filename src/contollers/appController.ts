@@ -42,6 +42,14 @@ const appController = {
       });
       return;
     }
+    if (user.isScanned) {
+      next({
+        ...customErrors.conflict(customErrorDescriptions.alreadyScanned),
+        error: new Error(customErrorDescriptions.alreadyScanned),
+      });
+      return;
+    }
+
     if (
       user.slotBooked ||
       slot.slotBookedBy.includes(<Types.ObjectId>user._id)
@@ -113,6 +121,13 @@ const appController = {
       });
       return;
     }
+    if (user.isScanned) {
+      next({
+        ...customErrors.conflict(customErrorDescriptions.alreadyScanned),
+        error: new Error(customErrorDescriptions.alreadyScanned),
+      });
+      return;
+    }
     if (user.isChangedSlot) {
       next({
         ...customErrors.conflict(customErrorDescriptions.slotAlreadyChanged),
@@ -181,6 +196,13 @@ const appController = {
       next({
         ...customErrors.notFound(customErrorDescriptions.userNotFound),
         error: new Error(customErrorDescriptions.userNotFound),
+      });
+      return;
+    }
+    if (user.isScanned) {
+      next({
+        ...customErrors.conflict(customErrorDescriptions.alreadyScanned),
+        error: new Error(customErrorDescriptions.alreadyScanned),
       });
       return;
     }

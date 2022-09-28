@@ -1,7 +1,6 @@
 import { getModelForClass } from "@typegoose/typegoose";
 import { RequestHandler } from "express";
 import { Types } from "mongoose";
-import { config } from "../config";
 import { customErrorDescriptions, customErrors } from "../constants";
 import { Slot, User } from "../entities";
 
@@ -31,12 +30,6 @@ const adminController = {
         return next({
           ...customErrors.conflict(customErrorDescriptions.slotAlreadyBooked),
           error: new Error(customErrorDescriptions.slotAlreadyBooked),
-        });
-      }
-      if (slot.slotBookedBy.length >= config.slotCapacity) {
-        return next({
-          ...customErrors.conflict(customErrorDescriptions.slotFull),
-          error: new Error(customErrorDescriptions.slotFull),
         });
       }
       if (slot.slotBookedBy.includes(<Types.ObjectId>user._id)) {
@@ -92,12 +85,6 @@ const adminController = {
         return next({
           ...customErrors.notFound(customErrorDescriptions.slotNotBooked),
           error: new Error(customErrorDescriptions.slotNotBooked),
-        });
-      }
-      if (slot.slotBookedBy.length >= config.slotCapacity) {
-        return next({
-          ...customErrors.conflict(customErrorDescriptions.slotFull),
-          error: new Error(customErrorDescriptions.slotFull),
         });
       }
       if (slot.slotBookedBy.includes(<Types.ObjectId>user._id)) {
@@ -248,7 +235,6 @@ const adminController = {
         });
       }
       user.isScanned = true;
-      user.isChangedSlot = true;
       await user.save();
       res.data = {
         user,
