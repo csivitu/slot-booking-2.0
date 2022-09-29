@@ -40,7 +40,7 @@ export const config: Config = {
   jwt: {
     secret: env("JWT_SECRET"),
   },
-  slotCapacity: 10,
+  slotCapacity: 20,
   emailer: {
     host: env("EMAILER_HOST"),
     auth: env("EMAILER_AUTH"),

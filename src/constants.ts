@@ -37,4 +37,5 @@ export const customErrorDescriptions = {
     "Cannot change slot within 12 hours of slot start time",
   notAdmin: "shorturl.at/aCQ14",
   alreadyScanned: "Already scanned",
+  notRegistered: "Not registered",
 };

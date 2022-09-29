@@ -3,6 +3,8 @@ import { RequestHandler } from "express";
 import { customErrorDescriptions, customErrors } from "../constants";
 import { User } from "../entities";
 import { verifyAccessToken } from "../helpers/jwtFuncs";
+import { GravitasUserType } from "../types/accountsUserType";
+import list from "../helpers/registered";
 
 const authMiddleware = <RequestHandler>(async (req, res, next) => {
   const { authorization } = <{ authorization: string }>req.headers;
@@ -21,12 +23,23 @@ const authMiddleware = <RequestHandler>(async (req, res, next) => {
     const userModel = getModelForClass(User);
     let user = await userModel.findOne({ username: payload.username });
     if (!user) {
+      const registeredList = <GravitasUserType[]>list;
+      const registeredUser = registeredList.find(
+        (usr) => usr["E-Mail"] === payload.email
+      );
+      if (!registeredUser) {
+        return next({
+          ...customErrors.notAuthorized(customErrorDescriptions.notRegistered),
+          error: new Error(customErrorDescriptions.notRegistered),
+        });
+      }
       //create user
       user = await userModel.create({
         username: payload.username,
         email: payload.email,
         name: payload.name,
         scope: payload.scope,
+        isPaid: registeredUser["Payment Status"] === "Paid",
       });
     }
     req.user = <User>user;
