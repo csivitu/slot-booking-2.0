@@ -27,7 +27,8 @@ const authMiddleware = <RequestHandler>(async (req, res, next) => {
     if (!user) {
       const registeredList = <GravitasUserType[]>list;
       const registeredUser = registeredList.find(
-        (usr) => usr["E-Mail"] === payload.email
+        (usr) =>
+          usr["E-Mail"].toLowerCase() === payload.email.toLocaleLowerCase()
       );
       if (!registeredUser) {
         return next({
