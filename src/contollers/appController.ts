@@ -112,7 +112,7 @@ const appController = {
       },
       user.email
     );
-    bookingLog.log(
+    bookingLog.info(
       `${user.username} booked slot ${(<Types.ObjectId>slot._id).toString()}`,
       user
     );
@@ -234,7 +234,7 @@ const appController = {
     user.slotBooked = slot;
     user.isChangedSlot = true;
     await Promise.all([slot.save(), user.save(), oldSlot.save()]);
-    bookingLog.log(
+    bookingLog.info(
       `${user.username} changed slot from ${(<Types.ObjectId>(
         oldSlot._id
       )).toString()} to ${(<Types.ObjectId>slot._id).toString()}`,
@@ -303,7 +303,7 @@ const appController = {
     user.isChangedSlot = true;
     user.qrCode = null;
     await Promise.all([slot.save(), user.save()]);
-    bookingLog.log(
+    bookingLog.info(
       `${user.username} cancelled slot ${(<Types.ObjectId>(
         slot._id
       )).toString()}`,

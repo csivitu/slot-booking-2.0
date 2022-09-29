@@ -34,7 +34,7 @@ export const sendSlotBookedMail = async (data: HtmlDataType, email: string) => {
     const postReq = https.request(postOptions, function (res) {
       res.setEncoding("utf8");
       res.on("data", function (chunk) {
-        logger.log(`mail sent to ${email} Response: `, chunk);
+        logger.info(`mail sent to ${email} Response: `, chunk);
       });
     });
 
