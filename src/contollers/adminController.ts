@@ -211,7 +211,7 @@ const adminController = {
   }),
   getUserInfo: <RequestHandler>(async (req, res, next) => {
     try {
-      const { username } = <{ username: string }>req.body;
+      const { username } = <{ username: string }>req.params;
       const userModel = getModelForClass(User);
       const user = await userModel.findOne({ username });
       if (!user) {
@@ -253,6 +253,12 @@ const adminController = {
         return next({
           ...customErrors.conflict(customErrorDescriptions.alreadyScanned),
           error: new Error(customErrorDescriptions.alreadyScanned),
+        });
+      }
+      if (!user.slotBooked) {
+        return next({
+          ...customErrors.conflict(customErrorDescriptions.slotNotBooked),
+          error: new Error(customErrorDescriptions.slotNotBooked),
         });
       }
       user.isScanned = true;
