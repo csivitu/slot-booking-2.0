@@ -7,18 +7,18 @@ import { Slot, User } from "../entities";
 import { generateQR } from "../helpers/generateQR";
 import { bookingLog } from "../helpers/logger";
 import { sendSlotBookedMail } from "../helpers/sendMail";
-import { generateSlotData } from "../helpers/SlotData";
+// import { generateSlotData } from "../helpers/SlotData";
 import { getTime } from "../helpers/timeFormats";
 
 const appController = {
   getSlots: <RequestHandler>(async (req, res, next) => {
     const slotModel = getModelForClass(Slot);
-    // const slots = await slotModel
-    //   .find({})
-    //   .sort({ date: 1, startTime: 1 })
-    //   .populate("slotBookedBy", "name username");
+    const slots = await slotModel
+      .find({})
+      .sort({ date: 1, startTime: 1 })
+      .populate("slotBookedBy", "name username");
 
-    const slots = await slotModel.create(generateSlotData());
+    // const slots = await slotModel.create(generateSlotData());
     res.data = {
       slots,
     };
