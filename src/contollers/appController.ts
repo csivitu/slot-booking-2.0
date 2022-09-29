@@ -334,6 +334,34 @@ const appController = {
     };
     next();
   }),
+
+  getBookingStats: <RequestHandler>(async (req, res, next) => {
+    const userModel = getModelForClass(User);
+    const slotModel = getModelForClass(Slot);
+    const users = await userModel.find();
+    const slots = await slotModel.find();
+    const stats = {
+      totalUsers: users.length,
+      totalSlots: slots.length,
+      totalBookedSlots: slots.filter((slot) => slot.slotBookedBy.length > 0)
+        .length,
+      totalBookedUsers: users.filter((user) => user.slotBooked).length,
+      totalScannedUsers: users.filter((user) => user.isScanned).length,
+      totalRemainingSeats: slots.reduce(
+        (acc, slot) =>
+          acc +
+          (slot.day === 2 || slot.day === 3
+            ? config.slotCapacity.day2
+            : config.slotCapacity.day1) -
+          slot.slotBookedBy.length,
+        0
+      ),
+    };
+    res.data = {
+      stats,
+    };
+    next();
+  }),
 };
 
 export default appController;

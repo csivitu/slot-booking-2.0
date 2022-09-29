@@ -6,6 +6,7 @@ import RequestProperties from "../../types/requestProperties";
 import adminRouter from "./adminRouter";
 import appRouter from "./appRouter";
 const router = Router();
+
 router.use(authMiddleware);
 router.use(
   handleValidation(authorizationHeaderSchema, RequestProperties.HEADERS)

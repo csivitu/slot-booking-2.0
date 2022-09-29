@@ -6,6 +6,7 @@ import errorHandler from "../../middlewares/errorHandler";
 import responseHandler from "../../middlewares/responseHandler";
 import { config } from "../../config";
 import limiter from "../../helpers/rateLimiter";
+import appController from "../../contollers/appController";
 // import limiter from "../../helpers/rateLimiter";
 
 export default (app: express.Application) => {
@@ -26,6 +27,7 @@ export default (app: express.Application) => {
     app.use(limiter);
   }
 
+  app.get("/stats", appController.getBookingStats);
   app.use("/v1", v1);
   app.use(responseHandler);
   app.use(errorHandler);
