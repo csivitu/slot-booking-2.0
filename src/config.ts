@@ -42,8 +42,8 @@ export const config: Config = {
   },
   slotCapacity: {
     day1: 10,
-    day2: 10,
-    day3: 10,
+    day2: 20,
+    day3: 20,
   },
   emailer: {
     host: env("EMAILER_HOST"),
