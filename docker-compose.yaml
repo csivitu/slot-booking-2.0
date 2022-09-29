@@ -24,7 +24,7 @@ services:
     ports:
       - "3002:3002"
     volumes:
-      - /home/salt57/logs:/app/logs
+      - /root/logs:/app/logs
     links:
       - mongodb
     environment:
