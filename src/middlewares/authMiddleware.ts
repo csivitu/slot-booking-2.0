@@ -5,6 +5,8 @@ import { User } from "../entities";
 import { verifyAccessToken } from "../helpers/jwtFuncs";
 import { GravitasUserType } from "../types/accountsUserType";
 import list from "../helpers/registered";
+import serializeError from "../helpers/serializeError";
+import { errorLog } from "../helpers/logger";
 
 const authMiddleware = <RequestHandler>(async (req, res, next) => {
   const { authorization } = <{ authorization: string }>req.headers;
@@ -45,6 +47,7 @@ const authMiddleware = <RequestHandler>(async (req, res, next) => {
     req.user = <User>user;
     next();
   } catch (error) {
+    errorLog.error(serializeError(error));
     next({
       ...customErrors.notAuthorized(customErrorDescriptions.invalidJWTToken),
       error,

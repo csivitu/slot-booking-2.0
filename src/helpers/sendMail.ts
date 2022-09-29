@@ -3,9 +3,10 @@ import ejs from "ejs";
 import { HtmlDataType } from "../types/htmlDataType";
 import { config } from "../config";
 import https from "https";
+import { errorLog, logger } from "./logger";
+import serializeError from "./serializeError";
 
 export const sendSlotBookedMail = async (data: HtmlDataType, email: string) => {
-  console.log("hi");
   try {
     const html = await ejs.renderFile(
       path.join(__dirname, "..", "..", "views/booked-slot.ejs"),
@@ -33,7 +34,7 @@ export const sendSlotBookedMail = async (data: HtmlDataType, email: string) => {
     const postReq = https.request(postOptions, function (res) {
       res.setEncoding("utf8");
       res.on("data", function (chunk) {
-        console.log("Response: ", chunk);
+        logger.log(`mail sent to ${email} Response: `, chunk);
       });
     });
 
@@ -41,6 +42,6 @@ export const sendSlotBookedMail = async (data: HtmlDataType, email: string) => {
     postReq.write(JSON.stringify(mailData));
     postReq.end();
   } catch (err) {
-    console.log(err);
+    errorLog.error(serializeError(err));
   }
 };

@@ -3,6 +3,7 @@ import { ResponseError } from "../types/errorTypes";
 import constructErrorObject from "../helpers/constructErrorObject";
 import Joi from "joi";
 import serializeError from "../helpers/serializeError";
+import { errorLog } from "../helpers/logger";
 
 const checkResponseError = (err: unknown) => {
   const responseErrorSchema = Joi.object({
@@ -31,6 +32,7 @@ const errorHandler = <ErrorRequestHandler>(async (err, req, res, next) => {
     res.status(code).json(response);
   } catch {
     const error = serializeError(<unknown>err);
+    errorLog.error(error);
 
     next(error);
   }

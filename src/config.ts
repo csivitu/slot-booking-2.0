@@ -21,7 +21,7 @@ export interface Config {
   jwt: {
     secret: string;
   };
-  slotCapacity: number;
+  slotCapacity: { day1: number; day2: number; day3: number };
   emailer: {
     host: string;
     auth: string;
@@ -40,7 +40,11 @@ export const config: Config = {
   jwt: {
     secret: env("JWT_SECRET"),
   },
-  slotCapacity: 20,
+  slotCapacity: {
+    day1: 10,
+    day2: 10,
+    day3: 10,
+  },
   emailer: {
     host: env("EMAILER_HOST"),
     auth: env("EMAILER_AUTH"),

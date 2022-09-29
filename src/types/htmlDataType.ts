@@ -1,6 +1,6 @@
 export interface HtmlDataType {
-  name?: string;
-  username?: string;
-  qrCode?: string;
+  date?: string;
+  time?: string;
+  svg?: string;
   link?: string;
 }

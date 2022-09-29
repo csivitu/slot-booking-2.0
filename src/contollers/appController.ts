@@ -5,7 +5,9 @@ import { config } from "../config";
 import { customErrors, customErrorDescriptions } from "../constants";
 import { Slot, User } from "../entities";
 import { generateQR } from "../helpers/generateQR";
+import { bookingLog } from "../helpers/logger";
 import { sendSlotBookedMail } from "../helpers/sendMail";
+import { getTime } from "../helpers/timeFormats";
 
 const appController = {
   getSlots: <RequestHandler>(async (req, res, next) => {
@@ -68,12 +70,31 @@ const appController = {
       });
       return;
     }
-    if (slot.slotBookedBy.length >= config.slotCapacity) {
-      next({
-        ...customErrors.conflict(customErrorDescriptions.slotFull),
-        error: new Error(customErrorDescriptions.slotFull),
-      });
-      return;
+    const day = slot.day;
+    if (day === 0) {
+      if (slot.slotBookedBy.length >= config.slotCapacity.day1) {
+        next({
+          ...customErrors.conflict(customErrorDescriptions.slotFull),
+          error: new Error(customErrorDescriptions.slotFull),
+        });
+        return;
+      }
+    } else if (day === 1) {
+      if (slot.slotBookedBy.length >= config.slotCapacity.day2) {
+        next({
+          ...customErrors.conflict(customErrorDescriptions.slotFull),
+          error: new Error(customErrorDescriptions.slotFull),
+        });
+        return;
+      }
+    } else if (day === 2) {
+      if (slot.slotBookedBy.length >= config.slotCapacity.day3) {
+        next({
+          ...customErrors.conflict(customErrorDescriptions.slotFull),
+          error: new Error(customErrorDescriptions.slotFull),
+        });
+        return;
+      }
     }
 
     const qr = await generateQR(`${config.clientUrl}scan/${user.username}`);
@@ -83,11 +104,17 @@ const appController = {
     await Promise.all([slot.save(), user.save()]);
     await sendSlotBookedMail(
       {
-        name: user.name,
-        username: user.username,
-        qrCode: user.qrCode ? user.qrCode : undefined,
+        date: new Date(slot.startTime).toDateString(),
+        time: `${getTime(slot.startTime.toString())} - ${getTime(
+          slot.endTime.toString()
+        )}`,
+        svg: `${config.clientUrl}scan/${user.username}`,
       },
       user.email
+    );
+    bookingLog.log(
+      `${user.username} booked slot ${(<Types.ObjectId>slot._id).toString()}`,
+      user
     );
     res.data = {
       user,
@@ -147,12 +174,31 @@ const appController = {
       });
       return;
     }
-    if (slot.slotBookedBy.length >= config.slotCapacity) {
-      next({
-        ...customErrors.conflict(customErrorDescriptions.slotFull),
-        error: new Error(customErrorDescriptions.slotFull),
-      });
-      return;
+    const day = slot.day;
+    if (day === 0) {
+      if (slot.slotBookedBy.length >= config.slotCapacity.day1) {
+        next({
+          ...customErrors.conflict(customErrorDescriptions.slotFull),
+          error: new Error(customErrorDescriptions.slotFull),
+        });
+        return;
+      }
+    } else if (day === 1) {
+      if (slot.slotBookedBy.length >= config.slotCapacity.day2) {
+        next({
+          ...customErrors.conflict(customErrorDescriptions.slotFull),
+          error: new Error(customErrorDescriptions.slotFull),
+        });
+        return;
+      }
+    } else if (day === 2) {
+      if (slot.slotBookedBy.length >= config.slotCapacity.day3) {
+        next({
+          ...customErrors.conflict(customErrorDescriptions.slotFull),
+          error: new Error(customErrorDescriptions.slotFull),
+        });
+        return;
+      }
     }
     if (slot.slotBookedBy.includes(<Types.ObjectId>user._id)) {
       next({
@@ -188,6 +234,12 @@ const appController = {
     user.slotBooked = slot;
     user.isChangedSlot = true;
     await Promise.all([slot.save(), user.save(), oldSlot.save()]);
+    bookingLog.log(
+      `${user.username} changed slot from ${(<Types.ObjectId>(
+        oldSlot._id
+      )).toString()} to ${(<Types.ObjectId>slot._id).toString()}`,
+      user
+    );
     res.data = {
       user,
     };
@@ -251,6 +303,12 @@ const appController = {
     user.isChangedSlot = true;
     user.qrCode = null;
     await Promise.all([slot.save(), user.save()]);
+    bookingLog.log(
+      `${user.username} cancelled slot ${(<Types.ObjectId>(
+        slot._id
+      )).toString()}`,
+      user
+    );
     res.data = {
       user,
     };

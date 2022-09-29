@@ -1,4 +1,6 @@
 import QRCode, { QRCodeToStringOptions } from "qrcode";
+import { errorLog } from "./logger";
+import serializeError from "./serializeError";
 
 export const generateQR = async (text: string) => {
   try {
@@ -8,6 +10,6 @@ export const generateQR = async (text: string) => {
 
     return await QRCode.toString(text, opts);
   } catch (err) {
-    console.error(err);
+    errorLog.error(serializeError(err));
   }
 };

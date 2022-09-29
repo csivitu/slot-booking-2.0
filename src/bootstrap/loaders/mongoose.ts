@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 import { config } from "../../config";
+import { errorLog } from "../../helpers/logger";
 import serializeError from "../../helpers/serializeError";
 
 // Close the Mongoose default connection is the event of application termination
@@ -10,7 +11,7 @@ process.on("SIGINT", () => {
       process.exit(0);
     },
     (err) => {
-      console.error(serializeError(<unknown>err));
+      errorLog.error(serializeError(<unknown>err));
       process.exit(1);
     }
   );

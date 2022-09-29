@@ -3,6 +3,8 @@ import { RequestHandler } from "express";
 import { Types } from "mongoose";
 import { customErrorDescriptions, customErrors } from "../constants";
 import { Slot, User } from "../entities";
+import { errorLog } from "../helpers/logger";
+import serializeError from "../helpers/serializeError";
 
 const adminController = {
   bookSlot: <RequestHandler>(async (req, res, next) => {
@@ -54,6 +56,7 @@ const adminController = {
       };
       next();
     } catch (err) {
+      errorLog.error(serializeError(err));
       return next({ ...customErrors.internalServerError(), error: err });
     }
   }),
@@ -121,6 +124,7 @@ const adminController = {
       };
       next();
     } catch (err) {
+      errorLog.error(serializeError(err));
       return next({ ...customErrors.internalServerError(), error: err });
     }
   }),
@@ -186,6 +190,7 @@ const adminController = {
       };
       next();
     } catch (err) {
+      errorLog.error(serializeError(err));
       return next({ ...customErrors.internalServerError(), error: err });
     }
   }),
@@ -205,6 +210,7 @@ const adminController = {
       };
       next();
     } catch (err) {
+      errorLog.error(serializeError(err));
       return next({ ...customErrors.internalServerError(), error: err });
     }
   }),
@@ -241,6 +247,7 @@ const adminController = {
       };
       next();
     } catch (err) {
+      errorLog.error(serializeError(err));
       return next({ ...customErrors.internalServerError(), error: err });
     }
   }),
@@ -254,6 +261,7 @@ const adminController = {
       };
       next();
     } catch (err) {
+      errorLog.error(serializeError(err));
       return next({ ...customErrors.internalServerError(), error: err });
     }
   }),
