@@ -3,7 +3,7 @@ import { RequestHandler } from "express";
 import { Types } from "mongoose";
 import { customErrorDescriptions, customErrors } from "../constants";
 import { Slot, User } from "../entities";
-import { errorLog } from "../helpers/logger";
+import { adminLogger, errorLog } from "../helpers/logger";
 import serializeError from "../helpers/serializeError";
 
 const adminController = {
@@ -50,6 +50,9 @@ const adminController = {
       slot.slotBookedBy.push(user);
       user.slotBooked = slot;
       await Promise.all([slot.save(), user.save()]);
+      adminLogger.info(
+        `Slot ${slotId} booked for ${username} by ${req.user.username}`
+      );
       res.data = {
         slot,
         user,
@@ -118,6 +121,13 @@ const adminController = {
       slot.slotBookedBy.push(user);
       user.slotBooked = slot;
       await Promise.all([slot.save(), user.save()]);
+      adminLogger.info(
+        `Slot ${(<Types.ObjectId>(
+          oldSlot._id
+        )).toString()} changed to ${slotId} for ${username} by ${
+          req.user.username
+        }`
+      );
       res.data = {
         slot,
         user,
@@ -184,6 +194,11 @@ const adminController = {
       );
       user.slotBooked = null;
       await Promise.all([slot.save(), user.save()]);
+      adminLogger.info(
+        `Slot ${(<Types.ObjectId>(
+          slot._id
+        )).toString()} cancelled for ${username} by ${req.user.username}`
+      );
       res.data = {
         slot,
         user,
@@ -242,6 +257,7 @@ const adminController = {
       }
       user.isScanned = true;
       await user.save();
+      adminLogger.info(`QR scanned for ${username} by ${req.user.username}`);
       res.data = {
         user,
       };
@@ -255,7 +271,9 @@ const adminController = {
   getUsers: <RequestHandler>(async (req, res, next) => {
     try {
       const userModel = getModelForClass(User);
-      const users = await userModel.find().populate("slotBooked");
+      const users = await userModel
+        .find()
+        .populate("slotBooked", "startTime endTime");
       res.data = {
         users,
       };

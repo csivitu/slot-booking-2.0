@@ -21,3 +21,11 @@ export const bookingLog = createLogger({
     new transports.File({ filename: "logs/booking.log" }),
   ],
 });
+
+export const adminLogger = createLogger({
+  transports: [
+    // new LoggingWinston(gcpAuthObject), // TO-DO: uncomment this line
+    new transports.Console(),
+    new transports.File({ filename: "logs/admin.log" }),
+  ],
+});
