@@ -1,4 +1,5 @@
 import { Router } from "express";
+import limiter from "../../helpers/rateLimiter";
 import { authorizationHeaderSchema } from "../../helpers/validationSchemas";
 import authMiddleware from "../../middlewares/authMiddleware";
 import handleValidation from "../../middlewares/handleValidation";
@@ -11,6 +12,6 @@ router.use(authMiddleware);
 router.use(
   handleValidation(authorizationHeaderSchema, RequestProperties.HEADERS)
 );
-router.use("/app", appRouter);
+router.use("/app", limiter, appRouter);
 router.use("/admin", adminRouter);
 export default router;
