@@ -31,12 +31,12 @@ router.post(
 router.post(
   "/changeSlot",
   handleValidation(adminBookSlotSchema, RequestProperties.BODY),
-  appController.changeSlot
+  adminController.changeSlot
 );
 router.post(
   "/cancelSlot",
   handleValidation(adminCancelSlotSchema, RequestProperties.BODY),
-  appController.cancelSlot
+  adminController.cancelSlot
 );
 router.get(
   "/userInfo/:username",

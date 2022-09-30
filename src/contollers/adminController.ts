@@ -173,12 +173,6 @@ const adminController = {
         });
       }
       // check if slot time is after current time
-      if (slot.startTime.getTime() < new Date().getTime()) {
-        return next({
-          ...customErrors.conflict(customErrorDescriptions.slotAlreadyStarted),
-          error: new Error(customErrorDescriptions.slotAlreadyStarted),
-        });
-      }
 
       slot.slotBookedBy = slot.slotBookedBy.filter(
         (id) =>
