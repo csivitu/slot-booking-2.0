@@ -180,6 +180,7 @@ const adminController = {
           (<Types.ObjectId>user._id).toString()
       );
       user.slotBooked = null;
+      user.isScanned = false;
       await Promise.all([slot.save(), user.save()]);
       adminLogger.info(
         `Slot ${(<Types.ObjectId>(
