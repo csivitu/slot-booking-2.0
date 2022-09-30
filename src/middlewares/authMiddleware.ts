@@ -27,8 +27,7 @@ const authMiddleware = <RequestHandler>(async (req, res, next) => {
     if (!user) {
       const registeredList = <GravitasUserType[]>list;
       const registeredUser = registeredList.find(
-        (usr) =>
-          usr["E-Mail"].toLowerCase() === payload.email.toLocaleLowerCase()
+        (usr) => usr["E-Mail"].toLowerCase() === payload.email.toLowerCase()
       );
       if (!registeredUser && !payload.scope.includes(ScopeTypes.ADMIN)) {
         return next({
