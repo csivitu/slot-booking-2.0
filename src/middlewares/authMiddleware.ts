@@ -3,7 +3,7 @@ import { RequestHandler } from "express";
 import { customErrorDescriptions, customErrors } from "../constants";
 import { User } from "../entities";
 import { verifyAccessToken } from "../helpers/jwtFuncs";
-import { GravitasUserType } from "../types/accountsUserType";
+import { GravitasUserType, ScopeTypes } from "../types/accountsUserType";
 import list from "../helpers/registered";
 import serializeError from "../helpers/serializeError";
 import { errorLog } from "../helpers/logger";
@@ -30,7 +30,7 @@ const authMiddleware = <RequestHandler>(async (req, res, next) => {
         (usr) =>
           usr["E-Mail"].toLowerCase() === payload.email.toLocaleLowerCase()
       );
-      if (!registeredUser) {
+      if (!registeredUser && !payload.scope.includes(ScopeTypes.ADMIN)) {
         return next({
           ...customErrors.notAuthorized(customErrorDescriptions.notRegistered),
           error: new Error(customErrorDescriptions.notRegistered),
@@ -42,7 +42,9 @@ const authMiddleware = <RequestHandler>(async (req, res, next) => {
         email: payload.email,
         name: payload.name,
         scope: payload.scope,
-        isPaid: registeredUser["Payment Status"] === "Paid",
+        isPaid:
+          payload.scope.includes(ScopeTypes.ADMIN) ||
+          (registeredUser && registeredUser["Payment Status"] === "Paid"),
       });
     }
     req.user = <User>user;
