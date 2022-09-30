@@ -28,25 +28,7 @@ const adminController = {
           error: new Error(customErrorDescriptions.slotNotFound),
         });
       }
-      if (user.slotBooked) {
-        return next({
-          ...customErrors.conflict(customErrorDescriptions.slotAlreadyBooked),
-          error: new Error(customErrorDescriptions.slotAlreadyBooked),
-        });
-      }
-      if (slot.slotBookedBy.includes(<Types.ObjectId>user._id)) {
-        return next({
-          ...customErrors.conflict(customErrorDescriptions.slotAlreadyBooked),
-          error: new Error(customErrorDescriptions.slotAlreadyBooked),
-        });
-      }
-      // check if slot time is after current time
-      if (slot.startTime.getTime() < new Date().getTime()) {
-        return next({
-          ...customErrors.conflict(customErrorDescriptions.slotAlreadyStarted),
-          error: new Error(customErrorDescriptions.slotAlreadyStarted),
-        });
-      }
+
       slot.slotBookedBy.push(user);
       user.slotBooked = slot;
       await Promise.all([slot.save(), user.save()]);
