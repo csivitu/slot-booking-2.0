@@ -172,13 +172,6 @@ const adminController = {
           error: new Error(customErrorDescriptions.userNotFound),
         });
       }
-
-      if (user.slotBooked !== <Types.ObjectId>slot._id) {
-        return next({
-          ...customErrors.conflict(customErrorDescriptions.slotNotFound),
-          error: new Error(customErrorDescriptions.slotNotFound),
-        });
-      }
       // check if slot time is after current time
       if (slot.startTime.getTime() < new Date().getTime()) {
         return next({
