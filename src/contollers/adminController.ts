@@ -1,8 +1,10 @@
 import { getModelForClass } from "@typegoose/typegoose";
 import { RequestHandler } from "express";
 import { Types } from "mongoose";
+import { config } from "../config";
 import { customErrorDescriptions, customErrors } from "../constants";
 import { Slot, User } from "../entities";
+import { generateQR } from "../helpers/generateQR";
 import { adminLogger, errorLog } from "../helpers/logger";
 import serializeError from "../helpers/serializeError";
 
@@ -29,7 +31,9 @@ const adminController = {
         });
       }
 
+      const qr = await generateQR(`${config.clientUrl}scan/${user.username}`);
       slot.slotBookedBy.push(user);
+      user.qrCode = qr ? qr : null;
       user.slotBooked = slot;
       await Promise.all([slot.save(), user.save()]);
       adminLogger.info(
