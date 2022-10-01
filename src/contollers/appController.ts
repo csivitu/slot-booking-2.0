@@ -350,10 +350,11 @@ const appController = {
       totalRemainingSeats: slots.reduce(
         (acc, slot) =>
           acc +
-          (slot.day === 2 || slot.day === 3
-            ? config.slotCapacity.day2
-            : config.slotCapacity.day1) -
-          slot.slotBookedBy.length,
+          (slot.startTime.getTime() < new Date().getTime()
+            ? 0
+            : (slot.day === 2 || slot.day === 3
+                ? config.slotCapacity.day2
+                : config.slotCapacity.day1) - slot.slotBookedBy.length),
         0
       ),
     };
