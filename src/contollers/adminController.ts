@@ -6,7 +6,9 @@ import { customErrorDescriptions, customErrors } from "../constants";
 import { Slot, User } from "../entities";
 import { generateQR } from "../helpers/generateQR";
 import { adminLogger, errorLog } from "../helpers/logger";
+import { sendSlotBookedMail } from "../helpers/sendMail";
 import serializeError from "../helpers/serializeError";
+import { getTime } from "../helpers/timeFormats";
 
 const adminController = {
   bookSlot: <RequestHandler>(async (req, res, next) => {
@@ -36,6 +38,17 @@ const adminController = {
       user.qrCode = qr ? qr : null;
       user.slotBooked = slot;
       await Promise.all([slot.save(), user.save()]);
+
+      await sendSlotBookedMail(
+        {
+          date: new Date(slot.startTime).toDateString(),
+          time: `${getTime(slot.startTime.toString())} - ${getTime(
+            slot.endTime.toString()
+          )}`,
+          svg: `${config.clientUrl}scan/${user.username}`,
+        },
+        user.email
+      );
       adminLogger.info(
         `Slot ${slotId} booked for ${username} by ${req.user.username}`
       );
