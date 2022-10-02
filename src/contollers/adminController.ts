@@ -242,12 +242,6 @@ const adminController = {
           error: new Error(customErrorDescriptions.alreadyScanned),
         });
       }
-      if (!user.slotBooked) {
-        return next({
-          ...customErrors.conflict(customErrorDescriptions.slotNotBooked),
-          error: new Error(customErrorDescriptions.slotNotBooked),
-        });
-      }
       user.isScanned = true;
       await user.save();
       adminLogger.info(`QR scanned for ${username} by ${req.user.username}`);
