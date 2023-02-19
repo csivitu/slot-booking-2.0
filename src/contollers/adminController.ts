@@ -1,10 +1,10 @@
 import { getModelForClass } from "@typegoose/typegoose";
 import { RequestHandler } from "express";
 import { Types } from "mongoose";
-import { config } from "../config";
+// import { config } from "../config";
 import { customErrorDescriptions, customErrors } from "../constants";
 import { Slot, User } from "../entities";
-import { generateQR } from "../helpers/generateQR";
+// import { generateQR } from "../helpers/generateQR";
 import { adminLogger, errorLog } from "../helpers/logger";
 import { sendSlotBookedMail } from "../helpers/sendMail";
 import serializeError from "../helpers/serializeError";
@@ -33,9 +33,9 @@ const adminController = {
         });
       }
 
-      const qr = await generateQR(`${config.clientUrl}scan/${user.username}`);
+      // const qr = await generateQR(`${config.clientUrl}scan/${user.username}`);
       slot.slotBookedBy.push(user);
-      user.qrCode = qr ? qr : null;
+      // user.qrCode = qr ? qr : null;
       user.slotBooked = slot;
       await Promise.all([slot.save(), user.save()]);
 
@@ -45,7 +45,7 @@ const adminController = {
           time: `${getTime(slot.startTime.toString())} - ${getTime(
             slot.endTime.toString()
           )}`,
-          svg: `${config.clientUrl}scan/${user.username}`,
+          // svg: `${config.clientUrl}scan/${user.username}`,
         },
         user.email
       );
@@ -179,7 +179,7 @@ const adminController = {
           (<Types.ObjectId>user._id).toString()
       );
       user.slotBooked = null;
-      user.isScanned = false;
+      // user.isScanned = false;
       await Promise.all([slot.save(), user.save()]);
       adminLogger.info(
         `Slot ${(<Types.ObjectId>(
@@ -216,44 +216,44 @@ const adminController = {
       return next({ ...customErrors.internalServerError(), error: err });
     }
   }),
-  scanQR: <RequestHandler>(async (req, res, next) => {
-    try {
-      if (!req.user.scope.includes("admin")) {
-        return next({
-          ...customErrors.notAuthorized(customErrorDescriptions.notAdmin),
-          error: new Error(customErrorDescriptions.notAdmin),
-        });
-      }
-      const { username } = <{ username: string }>req.params;
-      const userModel = getModelForClass(User);
-      getModelForClass(Slot);
-      const user = await userModel
-        .findOne({ username })
-        .populate("slotBooked", "startTime endTime");
-      if (!user) {
-        return next({
-          ...customErrors.notFound(customErrorDescriptions.userNotFound),
-          error: new Error(customErrorDescriptions.userNotFound),
-        });
-      }
-      if (user.isScanned) {
-        return next({
-          ...customErrors.conflict(customErrorDescriptions.alreadyScanned),
-          error: new Error(customErrorDescriptions.alreadyScanned),
-        });
-      }
-      user.isScanned = true;
-      await user.save();
-      adminLogger.info(`QR scanned for ${username} by ${req.user.username}`);
-      res.data = {
-        user,
-      };
-      next();
-    } catch (err) {
-      errorLog.error(serializeError(err));
-      return next({ ...customErrors.internalServerError(), error: err });
-    }
-  }),
+  // scanQR: <RequestHandler>(async (req, res, next) => {
+  //   try {
+  //     if (!req.user.scope.includes("admin")) {
+  //       return next({
+  //         ...customErrors.notAuthorized(customErrorDescriptions.notAdmin),
+  //         error: new Error(customErrorDescriptions.notAdmin),
+  //       });
+  //     }
+  //     const { username } = <{ username: string }>req.params;
+  //     const userModel = getModelForClass(User);
+  //     getModelForClass(Slot);
+  //     const user = await userModel
+  //       .findOne({ username })
+  //       .populate("slotBooked", "startTime endTime");
+  //     if (!user) {
+  //       return next({
+  //         ...customErrors.notFound(customErrorDescriptions.userNotFound),
+  //         error: new Error(customErrorDescriptions.userNotFound),
+  //       });
+  //     }
+  //     if (user.isScanned) {
+  //       return next({
+  //         ...customErrors.conflict(customErrorDescriptions.alreadyScanned),
+  //         error: new Error(customErrorDescriptions.alreadyScanned),
+  //       });
+  //     }
+  //     user.isScanned = true;
+  //     await user.save();
+  //     adminLogger.info(`QR scanned for ${username} by ${req.user.username}`);
+  //     res.data = {
+  //       user,
+  //     };
+  //     next();
+  //   } catch (err) {
+  //     errorLog.error(serializeError(err));
+  //     return next({ ...customErrors.internalServerError(), error: err });
+  //   }
+  // }),
 
   getUsers: <RequestHandler>(async (req, res, next) => {
     try {

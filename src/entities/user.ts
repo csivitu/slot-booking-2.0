@@ -12,8 +12,8 @@ export class User {
   @prop({ required: true, index: true, unique: true })
   public email!: string;
 
-  @prop({ default: false })
-  public isPaid!: boolean;
+  // @prop({ default: false })
+  // public isPaid!: boolean;
 
   @prop({ default: false })
   public isChangedSlot!: boolean;
@@ -28,9 +28,9 @@ export class User {
   })
   public scope!: string[];
 
-  @prop({ default: null })
-  public qrCode!: string | null;
+  // @prop({ default: null })
+  // public qrCode!: string | null;
 
-  @prop({ default: false })
-  public isScanned!: boolean;
+  // @prop({ default: false })
+  // public isScanned!: boolean;
 }

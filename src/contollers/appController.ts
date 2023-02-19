@@ -4,7 +4,7 @@ import { Types } from "mongoose";
 import { config } from "../config";
 import { customErrors, customErrorDescriptions } from "../constants";
 import { Slot, User } from "../entities";
-import { generateQR } from "../helpers/generateQR";
+// import { generateQR } from "../helpers/generateQR";
 import { bookingLog } from "../helpers/logger";
 import { sendSlotBookedMail } from "../helpers/sendMail";
 // import { generateSlotData } from "../helpers/SlotData";
@@ -46,13 +46,13 @@ const appController = {
       });
       return;
     }
-    if (user.isScanned) {
-      next({
-        ...customErrors.conflict(customErrorDescriptions.alreadyScanned),
-        error: new Error(customErrorDescriptions.alreadyScanned),
-      });
-      return;
-    }
+    // if (user.isScanned) {
+    //   next({
+    //     ...customErrors.conflict(customErrorDescriptions.alreadyScanned),
+    //     error: new Error(customErrorDescriptions.alreadyScanned),
+    //   });
+    //   return;
+    // }
 
     if (
       user.slotBooked ||
@@ -99,10 +99,10 @@ const appController = {
       }
     }
 
-    const qr = await generateQR(`${config.clientUrl}scan/${user.username}`);
+    // const qr = await generateQR(`${config.clientUrl}scan/${user.username}`);
     slot.slotBookedBy.push(user);
     user.slotBooked = slot;
-    user.qrCode = qr ? qr : null;
+    // user.qrCode = qr ? qr : null;
     await Promise.all([slot.save(), user.save()]);
     await sendSlotBookedMail(
       {
@@ -110,7 +110,7 @@ const appController = {
         time: `${getTime(slot.startTime.toString())} - ${getTime(
           slot.endTime.toString()
         )}`,
-        svg: `${config.clientUrl}scan/${user.username}`,
+        // svg: `${config.clientUrl}scan/${user.username}`,
       },
       user.email
     );
@@ -150,13 +150,13 @@ const appController = {
       });
       return;
     }
-    if (user.isScanned) {
-      next({
-        ...customErrors.conflict(customErrorDescriptions.alreadyScanned),
-        error: new Error(customErrorDescriptions.alreadyScanned),
-      });
-      return;
-    }
+    // if (user.isScanned) {
+    //   next({
+    //     ...customErrors.conflict(customErrorDescriptions.alreadyScanned),
+    //     error: new Error(customErrorDescriptions.alreadyScanned),
+    //   });
+    //   return;
+    // }
     if (user.isChangedSlot) {
       next({
         ...customErrors.conflict(customErrorDescriptions.slotAlreadyChanged),
@@ -260,13 +260,13 @@ const appController = {
       });
       return;
     }
-    if (user.isScanned) {
-      next({
-        ...customErrors.conflict(customErrorDescriptions.alreadyScanned),
-        error: new Error(customErrorDescriptions.alreadyScanned),
-      });
-      return;
-    }
+    // if (user.isScanned) {
+    //   next({
+    //     ...customErrors.conflict(customErrorDescriptions.alreadyScanned),
+    //     error: new Error(customErrorDescriptions.alreadyScanned),
+    //   });
+    //   return;
+    // }
     if (user.isChangedSlot) {
       next({
         ...customErrors.conflict(customErrorDescriptions.slotAlreadyChanged),
@@ -303,7 +303,7 @@ const appController = {
     );
     user.slotBooked = null;
     user.isChangedSlot = true;
-    user.qrCode = null;
+    // user.qrCode = null;
     await Promise.all([slot.save(), user.save()]);
     bookingLog.info(
       `${user.username} cancelled slot ${(<Types.ObjectId>(
@@ -346,7 +346,7 @@ const appController = {
       totalBookedSlots: slots.filter((slot) => slot.slotBookedBy.length > 0)
         .length,
       totalBookedUsers: users.filter((user) => user.slotBooked).length,
-      totalScannedUsers: users.filter((user) => user.isScanned).length,
+      // totalScannedUsers: users.filter((user) => user.isScanned).length,
       totalRemainingSeats: slots.reduce(
         (acc, slot) =>
           acc +

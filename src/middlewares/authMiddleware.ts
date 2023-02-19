@@ -3,8 +3,8 @@ import { RequestHandler } from "express";
 import { customErrorDescriptions, customErrors } from "../constants";
 import { User } from "../entities";
 import { verifyAccessToken } from "../helpers/jwtFuncs";
-import { GravitasUserType, ScopeTypes } from "../types/accountsUserType";
-import list from "../helpers/registered";
+// import { GravitasUserType, ScopeTypes } from "../types/accountsUserType";
+// import list from "../helpers/registered";
 import serializeError from "../helpers/serializeError";
 import { errorLog } from "../helpers/logger";
 
@@ -25,25 +25,25 @@ const authMiddleware = <RequestHandler>(async (req, res, next) => {
     const userModel = getModelForClass(User);
     let user = await userModel.findOne({ username: payload.username });
     if (!user) {
-      const registeredList = <GravitasUserType[]>list;
-      const registeredUser = registeredList.find(
-        (usr) => usr["E-Mail"].toLowerCase() === payload.email.toLowerCase()
-      );
-      if (!registeredUser && !payload.scope.includes(ScopeTypes.ADMIN)) {
-        return next({
-          ...customErrors.notAuthorized(customErrorDescriptions.notRegistered),
-          error: new Error(customErrorDescriptions.notRegistered),
-        });
-      }
+      // const registeredList = <GravitasUserType[]>list;
+      // const registeredUser = registeredList.find(
+      //   (usr) => usr["E-Mail"].toLowerCase() === payload.email.toLowerCase()
+      // );
+      // if (!registeredUser && !payload.scope.includes(ScopeTypes.ADMIN)) {
+      //   return next({
+      //     ...customErrors.notAuthorized(customErrorDescriptions.notRegistered),
+      //     error: new Error(customErrorDescriptions.notRegistered),
+      //   });
+      // }
       //create user
       user = await userModel.create({
         username: payload.username,
         email: payload.email,
         name: payload.name,
         scope: payload.scope,
-        isPaid:
-          payload.scope.includes(ScopeTypes.ADMIN) ||
-          (registeredUser && registeredUser["Payment Status"] === "Paid"),
+        // isPaid:
+        //   payload.scope.includes(ScopeTypes.ADMIN) ||
+        //   (registeredUser && registeredUser["Payment Status"] === "Paid"),
       });
     }
     req.user = <User>user;
